@@ -13,14 +13,14 @@ We have a class of players that shows up the money and the ownership of the land
 
 
 Group members:\
-Name     Username \
+Name    | Username \
 Junyi Xia  JunyiXia001\
 Hongyu Xu  RaidriarXu
 
 Work\
 One person will devolop the class/function of players.(Function C)\
 One person will develop the map (Function B)\
-At last, we will develop the main functuion of the game together. (Function A)\
+At last, we will develop the main functuion of the game together. (Function A)
 
 
 Communication\
