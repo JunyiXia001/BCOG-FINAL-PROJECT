@@ -3,6 +3,7 @@ from player import player
 import random
 import tkinter as tk
 from PIL import Image, ImageTk
+import json
 ### MainFrame and Map display 
 class Display:
     screen_size = (1920, 1080)
@@ -38,10 +39,10 @@ class Display:
     def create_map_frame(self):
         self.map_canvas = tk.Canvas(self.map_frame, width=self.screen_size[0] - self.info_display_width, height = self.screen_size[1] - self.interface_height)
         self.map_canvas.pack(fill="both", expand=True)
-        map_img = ImageTk.PhotoImage("File Path") #Need to find a map image
+        map_img = ImageTk.PhotoImage(Image.open("monopoly.png")) #Need to find a map image
         self.map_canvas.create_image(785,490, image=map_img, anchor=tk.CENTER)
 
-    def create_information_panel():
+    def create_information_panel(self):
 
 
 
@@ -63,6 +64,7 @@ def main():
         take_turn()
 
 def roll_die():
+
     return random.randint(1, 6)
 
 def take_turn(player):
@@ -95,6 +97,14 @@ def sell_land(player):
     player.lands[sell_id].owner = 0
     player.money += lands[sell_id].mortage
 
+
+## chance situation
+def take_chance():
+    with open("take_chance.json") as file_handle:
+        chance_card = file_handle.read()
+    card_dict = json.loads(chance_card)
+    num = random.randint(0,10)
+    return card_dict.get(num)
 
 
 if __name__ == "__main__":
