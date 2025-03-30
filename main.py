@@ -5,8 +5,10 @@ def main():
     player_list = []
     for i in range(player_num):
         player_list.append(player(i+1))
-    while player_list:
-        take_turn()
+    while len(player_list) > 1:
+        take_turn(player[0])
+        player.append(player[0])
+        player.pop(0)
 
 def roll_die():
     return random.randint(1, 6)
@@ -17,14 +19,16 @@ def take_turn(player):
 def load_map():
     pass
 
-def paid(player, num):
+def paid(player, receiver, num):
     if player.money >= num:
         player.money -= num
+        receiver.money += num
         return False
     while player.lands:
         sell_land(player)
         if player.money >= tmp_money:
             player.money -= num
+            receiver.money += num
             return False
     return True
         
