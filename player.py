@@ -3,6 +3,7 @@ class player:
     lands = []
     cards = []
     position = 0
+    jail_status = False
     def __init__(self, id):
         self.id = id
 
