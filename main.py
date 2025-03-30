@@ -1,4 +1,4 @@
-from land import land
+from land import Land
 from player import player
 import random
 import tkinter as tk
@@ -29,7 +29,7 @@ class Display:
     
     
     def create_interface_frame(self):
-        roll_dice = tk.Button(self.interface_frame, text="Go", command=self.take_turn(), bg="green")
+        roll_dice = tk.Button(self.interface_frame, text="Go", command=take_turn, bg="green")
         roll_dice.pack(side = "right",padx=10, pady=10)
         build_button = tk.Button(self.interface_frame, text="Build", command=None, bg="blue") #Need add command to build parts
         build_button.pack(side = "left",padx=10, pady=10)
@@ -43,6 +43,7 @@ class Display:
         self.map_canvas.create_image(785,490, image=map_img, anchor=tk.CENTER)
 
     def create_information_panel(self):
+        return
 
 
 
@@ -66,29 +67,37 @@ def main():
         player.pop(0)
 
 def roll_die():
-
     return random.randint(1, 6)
 
 def take_turn(player):
     move = roll_die()
 
-def load_map():
-    pass
-##load map has been included in the display class 
+ 
 
 def paid(player, receiver, num):
     if player.money >= num:
         player.money -= num
         receiver.money += num
         return False
-    while player.lands:
-        sell_land(player)
-        if player.money >= tmp_money:
-            player.money -= num
-            receiver.money += num
-            return False
+    if player.land_sum >= num:
+        while player.lands:
+            sell_land(player)
+            if player.money >= tmp_money:
+                player.money -= num
+                receiver.money += num
+                return False
     return True
-        
+
+def load_map():
+    lands = []
+    with open("take_chance.json") as file:
+        read_file = file.read()
+    land_dict = json.loads(read_file)
+    for i in range(len(land_dict)):
+        lands.append(Land(land_dict[i]["name"], land_dict[i]["Type"], land_dict[i]["HousePrice"], land_dict[i]["Color"], land_dict[i]["Price"], land_dict[i]["Rent"]))
+
+    
+
 def sell_land(player):
     sell_id = int(input("which to sell\n"))
     while lands[sell_id].level > 0:
@@ -98,8 +107,10 @@ def sell_land(player):
             player.money += lands[sell_id].house_price/2
         else:
             return
-    player.lands[sell_id].owner = 0
-    player.money += lands[sell_id].mortage
+    sells = bool(input("sell the land?"))
+    if sells:
+        player.lands[sell_id].owner = 0
+        player.money += int(lands[sell_id].price*0.7)
 
 
 ## chance situation
