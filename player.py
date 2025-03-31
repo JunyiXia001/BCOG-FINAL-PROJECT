@@ -1,4 +1,16 @@
 class player:
+    color_count = {
+        "Railroad": 0,
+        "Utility": 0,
+        "Purple": 0,
+        "Light Blue": 0,
+        "Pink": 0,
+        "Orange": 0,
+        "Red": 0,
+        "Yellow": 0,
+        "Green": 0,
+        "Dark Blue": 0,
+    }
     money = 1500
     lands = []
     cards = []

@@ -4,6 +4,18 @@ import random
 import tkinter as tk
 from PIL import Image, ImageTk
 import json
+color_num = {
+    "Railroad": 4,
+    "Purple": 2,
+    "Light Blue": 3,
+    "Pink": 3,
+    "Orange": 3,
+    "Red": 3,
+    "Yellow": 3,
+    "Green": 3,
+    "Dark Blue": 2,
+    "Utility": 2
+}
 ### MainFrame and Map display 
 class Display:
     screen_size = (1920, 1080)
@@ -55,24 +67,80 @@ class Display:
 
 def main():
     #added this line to run the window 
-    my_display = Display()
-    my_display.root.mainloop()
+    # my_display = Display()
+    # my_display.root.mainloop()
+    game_map = loadMap()
     player_num = int(input("how many players in this game\n"))
     player_list = []
     for i in range(player_num):
         player_list.append(player(i+1))
     while len(player_list) > 1:
-        take_turn(player[0])
+        takeTurn(game_map, player_list, player[0], 0)
         player.append(player[0])
         player.pop(0)
 
-def roll_die():
+def rollDie():
     return random.randint(1, 6)
 
-def take_turn(player):
-    move = roll_die()
+def takeTurn(game_map, player_list, player, count):
+    die1 = roll_die()
+    die2 = roll_die()
+    one_more = False
+    if die1 == die2:
+        count+=1
+        one_more = True
+    player.position = (player.position + die1 + die2) % 40
 
- 
+    if game_map[player.position].land_type == "Property":
+        if game_map[player.position].pledge == False:
+            if game_map[player.position].owner == 0:
+                buy = bool(input("do you want to buy the land?\n"))
+                if buy:
+                    buyLand(player, game_map[player.position])
+            elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
+                paid(player, player_list[game_map[player.position].owner], game_map[player.position].rentNum())
+
+    elif game_map[player.position].land_type == "Railroad":
+        if game_map[player.position].pledge == False:
+            if game_map[player.position].owner == 0:
+                buy = bool(input("do you want to buy the land?\n"))
+                if buy:
+                    buyLand(player, game_map[player.position])
+            elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
+                paid(player, player_list[game_map[player.position].owner], game_map[player.position].rentNum())
+    
+    elif game_map[player.position].land_type == "Utility":
+        if game_map[player.position].pledge == False:
+            if game_map[player.position].owner == 0:
+                buy = bool(input("do you want to buy the land?\n"))
+                if buy:
+                    buyLand(player, game_map[player.position])
+            elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
+                paid(player, player_list[game_map[player.position].owner], game_map[player.position].rentNum(die1 + die2))
+
+    
+
+def buyLand(player, land):
+    if player.money >= land.price:
+        player.money -= land.price
+        player.lands.append(land)
+        land.owner = player.id
+        if land.land_type == "Property":
+            player.color_count[land.color] += 1
+            if player.color_count[land.color] == color_num[land.color]:
+                for i in player.lands:
+                    if i.color == land.color:
+                        i.level = 1
+        elif land.land_type == "Railroad":
+            player.color_count["Railroad"] += 1
+            for i in player.lands:
+                if i.land_type == "Railroad":
+                    i.level = player.color_count["Railroad"] - 1
+        elif land.land_type == "Utility":
+            player.color_count["Utility"] += 1
+            for i in player.lands:
+                if i.land_type == "Utility":
+                    i.level = player.color_count["Utility"] - 1
 
 def paid(player, receiver, num):
     if player.money >= num:
@@ -81,24 +149,24 @@ def paid(player, receiver, num):
         return False
     if player.land_sum >= num:
         while player.lands:
-            sell_land(player)
+            sellLand(player)
             if player.money >= tmp_money:
                 player.money -= num
                 receiver.money += num
                 return False
     return True
 
-def load_map():
+def loadMap():
     lands = []
-    with open("take_chance.json") as file:
-        read_file = file.read()
-    land_dict = json.loads(read_file)
+    with open("monopoly_space_info.json", "r") as file:
+        land_dict = json.load(file)
     for i in range(len(land_dict)):
-        lands.append(Land(land_dict[i]["name"], land_dict[i]["Type"], land_dict[i]["HousePrice"], land_dict[i]["Color"], land_dict[i]["Price"], land_dict[i]["Rent"]))
+        lands.append(Land(land_dict[i]["Name"], land_dict[i]["Type"], land_dict[i]["HousePrice"], land_dict[i]["Color"], land_dict[i]["Price"], land_dict[i]["Rent"]))
+    return lands
 
     
 
-def sell_land(player):
+def sellLand(player):
     sell_id = int(input("which to sell\n"))
     while lands[sell_id].level > 0:
         degrade = bool(input("sell the house?"))
@@ -109,7 +177,7 @@ def sell_land(player):
             return
     sells = bool(input("sell the land?"))
     if sells:
-        player.lands[sell_id].owner = 0
+        player.lands[sell_id].pledge = True
         player.money += int(lands[sell_id].price*0.7)
 
 
