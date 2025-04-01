@@ -29,7 +29,7 @@ class Display:
         self.interface_frame = tk.Frame(self.root, height= self.interface_height)
         self.interface_frame.grid(row=1, column=0, columnspan=2)
         #info display
-        self.info_display_width = 350
+        self.info_display_width = 550
         self.info_panel = tk.Frame(self.root, wid=self.info_display_width)
         self.info_panel.grid(row=0, column=1)
         #Map
@@ -43,19 +43,23 @@ class Display:
     def create_interface_frame(self):
         roll_dice = tk.Button(self.interface_frame, text="Go", command=None, bg="green") # Need add command of take turn 
         roll_dice.pack(side = "right",padx=10, pady=10)
-        build_button = tk.Button(self.interface_frame, text="Build", command=None, bg="blue") #Need add command to build parts
+        build_button = tk.Button(self.interface_frame, text="Build", command=None, bg="yellow") #Need add command to build parts
         build_button.pack(side = "left",padx=10, pady=10)
         sell_button = tk.Button(self.interface_frame, text="Sell", command=None, bg="red") #Need add command to sell part
         sell_button.pack(side = "right",padx=10,pady=10)
 
     def create_map_frame(self):
-        self.map_canvas = tk.Canvas(self.map_frame, width=self.screen_size[0] - self.info_display_width, height = self.screen_size[1] - self.interface_height)
+        self.map_width = self.screen_size[0] - self.info_display_width
+        self.map_height = self.screen_size[1] - self.interface_height
+        self.map_canvas = tk.Canvas(self.map_frame, width=self.map_width, height =self.map_height)
         self.map_canvas.pack(fill="both", expand=True)
-        map_img = ImageTk.PhotoImage(Image.open("monopoly.png")) #Need to find a map image
-        self.map_canvas.create_image(785,490, image=map_img, anchor=tk.CENTER)
+        self.org_img = Image.open("monopoly.png") #Need to find a map image
+        self.rev_img = self.org_img.resize((self.screen_size[0] - self.info_display_width,self.screen_size[1] - self.interface_height), Image.Resampling.LANCZOS)
+        self.map_img = ImageTk.PhotoImage(self.rev_img)
+        self.map_canvas.create_image(self.map_width // 2,self.map_height // 2, image=self.map_img, anchor=tk.CENTER)
 
     def create_information_panel(self):
-        return
+        pass
 
 
 
@@ -67,10 +71,10 @@ class Display:
 
 def main():
     #added this line to run the window 
-    # my_display = Display()
-    # my_display.root.mainloop()
+    my_display = Display()
+    my_display.root.mainloop()
     game_map = loadMap()
-    player_num = int(input("how many players in this game\n"))
+    player_num = 2
     player_list = []
     for i in range(player_num):
         player_list.append(player(i+1))
@@ -90,14 +94,14 @@ def takeTurn(game_map, player_list, player, count):
             player.jail_status = 0
             player.money -= 50
         elif choice == 1:
-            die1 = roll_die()
-            die2 = roll_die()
+            die1 = rollDie()
+            die2 = rollDie()
             if die1 != die2:
                 return
             else:
                 player.jail_status = 0
-    die1 = roll_die()
-    die2 = roll_die()
+    die1 = rollDie()
+    die2 = rollDie()
     one_more = False
     
     if die1 == die2:
