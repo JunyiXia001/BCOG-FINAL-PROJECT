@@ -41,7 +41,7 @@ class Display:
     
     
     def create_interface_frame(self):
-        roll_dice = tk.Button(self.interface_frame, text="Go", command=take_turn, bg="green")
+        roll_dice = tk.Button(self.interface_frame, text="Go", command=None, bg="green") # Need add command of take turn 
         roll_dice.pack(side = "right",padx=10, pady=10)
         build_button = tk.Button(self.interface_frame, text="Build", command=None, bg="blue") #Need add command to build parts
         build_button.pack(side = "left",padx=10, pady=10)
