@@ -59,7 +59,13 @@ class Display:
         self.map_canvas.create_image(self.map_width // 2,self.map_height // 2, image=self.map_img, anchor=tk.CENTER)
 
     def create_information_panel(self):
-        pass
+        panel = tk.Label(self.info_panel, text="Game Information", font=("Times New Roman", 12, "bold"))
+        panel.pack(pady=(5,5))
+        panel_frame = tk.Frame(self.info_panel)
+        panel_frame.pack(fill="both", expand=True, padx=10, pady=5)
+        scrollbar = tk.Scrollbar(panel_frame)
+        scrollbar.pack(side="right", fill="y")
+        
 
 
 
