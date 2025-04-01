@@ -83,9 +83,23 @@ def rollDie():
     return random.randint(1, 6)
 
 def takeTurn(game_map, player_list, player, count):
+    if player.jail_status > 0:
+        player.jail_status -= 1
+        choice = int(input("paid, roll, card"))
+        if choice == 0:
+            player.jail_status = 0
+            player.money -= 50
+        elif choice == 1:
+            die1 = roll_die()
+            die2 = roll_die()
+            if die1 != die2:
+                return
+            else:
+                player.jail_status = 0
     die1 = roll_die()
     die2 = roll_die()
     one_more = False
+    
     if die1 == die2:
         count+=1
         one_more = True
@@ -117,6 +131,13 @@ def takeTurn(game_map, player_list, player, count):
                     buyLand(player, game_map[player.position])
             elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
                 paid(player, player_list[game_map[player.position].owner], game_map[player.position].rentNum(die1 + die2))
+
+    elif game_map[player.position].land_type == "Go":
+        player.money += 200
+    
+    elif game_map[player.position].land_type == "Jail":
+        player.position = 10
+        player.jail_status = 2
 
     
 
