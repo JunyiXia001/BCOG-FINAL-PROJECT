@@ -15,7 +15,7 @@ class player:
     lands = []
     cards = []
     position = 0
-    jail_status = False
+    jail_status = 0
     def __init__(self, id):
         self.id = id
 
