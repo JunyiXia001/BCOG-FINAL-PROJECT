@@ -65,7 +65,7 @@ class Display:
         panel_frame.pack(fill="both", expand=True, padx=10, pady=5)
         scrollbar = tk.Scrollbar(panel_frame)
         scrollbar.pack(side="right", fill="y")
-        
+
 
 
 
