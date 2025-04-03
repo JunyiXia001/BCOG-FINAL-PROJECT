@@ -1,4 +1,4 @@
-class player:
+class Player:
     color_count = {
         "Railroad": 0,
         "Utility": 0,

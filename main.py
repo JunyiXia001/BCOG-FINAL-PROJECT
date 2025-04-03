@@ -1,5 +1,5 @@
 from land import Land
-from player import player
+from player import Player
 import random
 import tkinter as tk
 from PIL import Image, ImageTk
@@ -16,11 +16,18 @@ color_num = {
     "Dark Blue": 2,
     "Utility": 2
 }
+game_map = []
 ### MainFrame and Map display 
 class Display:
     screen_size = (1920, 1080)
     def __init__(self):
         self.root = tk.Tk()
+        self.init_window()
+        self.player_num = 2
+        self.game_map = game_map
+        self.player_list = [Player(i + 1) for i in range(self.player_num)]  
+        self.current_player = self.player_list[0]
+        self.count = 0
         self.init_window()
     def init_window(self):
         self.root.title("Monopoly Game")
@@ -33,7 +40,7 @@ class Display:
         self.info_panel = tk.Frame(self.root, wid=self.info_display_width)
         self.info_panel.grid(row=0, column=1)
         #Map
-        self.map_frame = tk.Frame(self.root, height=self.screen_size[1] - self.interface_height)
+        self.map_frame = tk.Frame(self.root, height=self.screen_size[1] - self.interface_height, width=self.screen_size[0] - self.info_display_width)
         self.map_frame.grid(row=0, column=0)
         self.create_map_frame()
         self.create_interface_frame()
@@ -41,7 +48,7 @@ class Display:
     
     
     def create_interface_frame(self):
-        roll_dice = tk.Button(self.interface_frame, text="Go", command=None, bg="green") # Need add command of take turn 
+        roll_dice = tk.Button(self.interface_frame, text="Go", command=self.next_turn, bg="green") # Need add command of take turn 
         roll_dice.pack(side = "right",padx=10, pady=10)
         build_button = tk.Button(self.interface_frame, text="Build", command=None, bg="yellow") #Need add command to build parts
         build_button.pack(side = "left",padx=10, pady=10)
@@ -67,32 +74,40 @@ class Display:
         scrollbar.pack(side="right", fill="y")
 
 
+    def next_turn(self):
+        take_turn(self.game_map, self.player_list, self.current_player, self.count)
+        self.player_list.append(self.player_list.pop(0)) 
+        self.current_player = self.player_list[0]
+        self.count += 1
 
 
 
 
 
+# main function need to be change, move to the botttom. Also,the main game logic need to be a seperate function.
+#This main function only relates to display the game. 
+# def main():
+#     #added this line to run the window 
+#     my_display = Display()
+#     my_display.root.mainloop()
+#     # my_display.create_map_frame()
 
+#     player_num = 0
+   
+#     for i in range(player_num):
+#         player_list.append(Player(i+1))
+#     while len(player_list) > 1:
+#         take_turn(game_map, player_list, player_list[0], 0)
+#         player_list.append(player_list[0])
+#         player_list.pop(0)
+    
+  
+    
 
-
-def main():
-    #added this line to run the window 
-    my_display = Display()
-    my_display.root.mainloop()
-    game_map = loadMap()
-    player_num = 2
-    player_list = []
-    for i in range(player_num):
-        player_list.append(player(i+1))
-    while len(player_list) > 1:
-        takeTurn(game_map, player_list, player[0], 0)
-        player.append(player[0])
-        player.pop(0)
-
-def rollDie():
+def roll_die():
     return random.randint(1, 6)
 
-def takeTurn(game_map, player_list, player, count):
+def take_turn(game_map, player_list, player, count):
     if player.jail_status > 0:
         player.jail_status -= 1
         choice = int(input("paid, roll, card"))
@@ -100,14 +115,14 @@ def takeTurn(game_map, player_list, player, count):
             player.jail_status = 0
             player.money -= 50
         elif choice == 1:
-            die1 = rollDie()
-            die2 = rollDie()
+            die1 = roll_die()
+            die2 = roll_die()
             if die1 != die2:
                 return
             else:
                 player.jail_status = 0
-    die1 = rollDie()
-    die2 = rollDie()
+    die1 = roll_die()
+    die2 = roll_die()
     one_more = False
     
     if die1 == die2:
@@ -220,6 +235,10 @@ def take_chance():
     num = random.randint(0,10)
     return card_dict.get(num)
 
+def main():
+    #added this line to run the window 
+    my_display = Display()
+    my_display.root.mainloop()
 
 if __name__ == "__main__":
     main()
