@@ -22,13 +22,12 @@ class Display:
     screen_size = (1920, 1080)
     def __init__(self):
         self.root = tk.Tk()
-        self.init_window()
         self.player_num = 2
+        self.init_window()
         self.game_map = game_map
         self.player_list = [Player(i + 1) for i in range(self.player_num)]  
         self.current_player = self.player_list[0]
         self.count = 0
-        self.init_window()
     def init_window(self):
         self.root.title("Monopoly Game")
         #Interface
@@ -61,7 +60,7 @@ class Display:
         self.map_canvas = tk.Canvas(self.map_frame, width=self.map_width, height =self.map_height)
         self.map_canvas.pack(fill="both", expand=True)
         self.org_img = Image.open("monopoly.png") #Need to find a map image
-        self.rev_img = self.org_img.resize((self.screen_size[0] - self.info_display_width,self.screen_size[1] - self.interface_height), Image.Resampling.LANCZOS)
+        self.rev_img = self.org_img.resize(( self.map_width,self.map_height), Image.Resampling.LANCZOS)
         self.map_img = ImageTk.PhotoImage(self.rev_img)
         self.map_canvas.create_image(self.map_width // 2,self.map_height // 2, image=self.map_img, anchor=tk.CENTER)
 
@@ -72,7 +71,13 @@ class Display:
         panel_frame.pack(fill="both", expand=True, padx=10, pady=5)
         scrollbar = tk.Scrollbar(panel_frame)
         scrollbar.pack(side="right", fill="y")
-
+        
+        self.info_frame = tk.Text(panel_frame, wrap="word", height=30, width=50, yscrollcommand=scrollbar.set, state="disabled")
+        self.info_frame.pack(side="left", fill="both", expand=True)
+        scrollbar.config(command=self.info_frame.yview)
+        self.message("Welcome to Monopoly Game")
+        self.message(f"Current player is {self.player_num}. Each player has $1500.")
+        self.message("Click Go! to start the game! Good Luck!")
 
     def next_turn(self):
         take_turn(self.game_map, self.player_list, self.current_player, self.count)
@@ -80,12 +85,15 @@ class Display:
         self.current_player = self.player_list[0]
         self.count += 1
 
+    def call_buy_land(self):
+        pass
 
-
-
-
-# main function need to be change, move to the botttom. Also,the main game logic need to be a seperate function.
-#This main function only relates to display the game. 
+    
+    def message(self, message):
+        self.info_frame.config(state="normal")
+        self.info_frame.insert("end", message + "\n")
+        self.info_frame.see("end")
+        self.info_frame.config(state="disabled")
 # def main():
 #     #added this line to run the window 
 #     my_display = Display()
