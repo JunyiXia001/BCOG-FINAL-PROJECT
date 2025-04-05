@@ -91,6 +91,7 @@ class Display:
         pass
 
     # setup for message box 
+    ## Source from stackoverflow Date: 4/3/2025 Link: https://stackoverflow.com/questions/3842155/is-there-a-way-to-make-the-tkinter-text-widget-read-only?
     def message(self, message):
         self.info_frame.config(state="normal")
         self.info_frame.insert("end", message + "\n")
