@@ -56,10 +56,17 @@ take_chance(): choose events randomly and return it as a string.
 This game designed for people that interested in playing broad game, which allows players to play on computer if they don't have physical cards or board. 
 
 **Input File**
-monopoly_space_info.json: JSON file\
-take_chance.json: JSON file\
-land.py: python file\
-player.py: python file\
+monopoly_space_info.json: This is a JSON file. This files contains list of 40 ordered space of the map. Here is field name and type: 
+Name: String;\
+Type: String \
+Price: int \
+HousePrice: int\
+Color: string\
+ent: list[int]\
+In those variables, Name, Type and Price should be in specifed order.\
+
+take_chance.json: This is a JSON file. This file store 10 events and will be selected randomly. Key is their number label and values are cards, their decription and effect. These three variables are stored as String type and specific order is not required. \
+
 
 
 **Test Case**
