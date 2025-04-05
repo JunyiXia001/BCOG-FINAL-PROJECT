@@ -21,6 +21,7 @@ game_map = []
 class Display:
     screen_size = (1920, 1080)
     def __init__(self):
+        #Basic setup of display function 
         self.root = tk.Tk()
         self.player_num = 2
         self.init_window()
@@ -45,25 +46,26 @@ class Display:
         self.create_interface_frame()
         self.create_information_panel()
     
-    
+    #Create interface frame and buttons 
     def create_interface_frame(self):
-        roll_dice = tk.Button(self.interface_frame, text="Go", command=self.next_turn, bg="green") # Need add command of take turn 
+        roll_dice = tk.Button(self.interface_frame, text="Go", command=self.next_turn, bg="green") 
         roll_dice.pack(side = "right",padx=10, pady=10)
-        build_button = tk.Button(self.interface_frame, text="Build", command=None, bg="yellow") #Need add command to build parts
+        build_button = tk.Button(self.interface_frame, text="Build", command=None, bg="yellow") 
         build_button.pack(side = "left",padx=10, pady=10)
-        sell_button = tk.Button(self.interface_frame, text="Sell", command=None, bg="red") #Need add command to sell part
+        sell_button = tk.Button(self.interface_frame, text="Sell", command=None, bg="red") 
         sell_button.pack(side = "right",padx=10,pady=10)
 
+    #Create map frame and load map
     def create_map_frame(self):
         self.map_width = self.screen_size[0] - self.info_display_width
         self.map_height = self.screen_size[1] - self.interface_height
         self.map_canvas = tk.Canvas(self.map_frame, width=self.map_width, height =self.map_height)
         self.map_canvas.pack(fill="both", expand=True)
-        self.org_img = Image.open("monopoly.png") #Need to find a map image
+        self.org_img = Image.open("monopoly.png") 
         self.rev_img = self.org_img.resize(( self.map_width,self.map_height), Image.Resampling.LANCZOS)
         self.map_img = ImageTk.PhotoImage(self.rev_img)
         self.map_canvas.create_image(self.map_width // 2,self.map_height // 2, image=self.map_img, anchor=tk.CENTER)
-
+    #Create information panel 
     def create_information_panel(self):
         panel = tk.Label(self.info_panel, text="Game Information", font=("Times New Roman", 12, "bold"))
         panel.pack(pady=(5,5))
@@ -71,24 +73,24 @@ class Display:
         panel_frame.pack(fill="both", expand=True, padx=10, pady=5)
         scrollbar = tk.Scrollbar(panel_frame)
         scrollbar.pack(side="right", fill="y")
-        
+    #Create message box 
         self.info_frame = tk.Text(panel_frame, wrap="word", height=30, width=50, yscrollcommand=scrollbar.set, state="disabled")
         self.info_frame.pack(side="left", fill="both", expand=True)
         scrollbar.config(command=self.info_frame.yview)
         self.message("Welcome to Monopoly Game")
         self.message(f"Current player is {self.player_num}. Each player has $1500.")
         self.message("Click Go! to start the game! Good Luck!")
-
+    # connect button with take turn method 
     def next_turn(self):
         take_turn(self.game_map, self.player_list, self.current_player, self.count)
         self.player_list.append(self.player_list.pop(0)) 
         self.current_player = self.player_list[0]
         self.count += 1
-
+    # connect button with buy land method 
     def call_buy_land(self):
         pass
 
-    
+    # setup for message box 
     def message(self, message):
         self.info_frame.config(state="normal")
         self.info_frame.insert("end", message + "\n")
@@ -111,11 +113,13 @@ class Display:
     
   
     
-
+# Roll dice 
 def roll_die():
     return random.randint(1, 6)
 
+# Game logic 
 def take_turn(game_map, player_list, player, count):
+    #Check player's jail status
     if player.jail_status > 0:
         player.jail_status -= 1
         choice = int(input("paid, roll, card"))
@@ -132,12 +136,13 @@ def take_turn(game_map, player_list, player, count):
     die1 = roll_die()
     die2 = roll_die()
     one_more = False
-    
+    #Move
     if die1 == die2:
         count+=1
         one_more = True
     player.position = (player.position + die1 + die2) % 40
-
+    #Check the space that players move to
+    #Property
     if game_map[player.position].land_type == "Property":
         if game_map[player.position].pledge == False:
             if game_map[player.position].owner == 0:
@@ -146,7 +151,7 @@ def take_turn(game_map, player_list, player, count):
                     buyLand(player, game_map[player.position])
             elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
                 paid(player, player_list[game_map[player.position].owner], game_map[player.position].rentNum())
-
+    #Railroad
     elif game_map[player.position].land_type == "Railroad":
         if game_map[player.position].pledge == False:
             if game_map[player.position].owner == 0:
@@ -155,7 +160,7 @@ def take_turn(game_map, player_list, player, count):
                     buyLand(player, game_map[player.position])
             elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
                 paid(player, player_list[game_map[player.position].owner], game_map[player.position].rentNum())
-    
+    #Utility
     elif game_map[player.position].land_type == "Utility":
         if game_map[player.position].pledge == False:
             if game_map[player.position].owner == 0:
@@ -164,16 +169,16 @@ def take_turn(game_map, player_list, player, count):
                     buyLand(player, game_map[player.position])
             elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
                 paid(player, player_list[game_map[player.position].owner], game_map[player.position].rentNum(die1 + die2))
-
+    #GO 
     elif game_map[player.position].land_type == "Go":
         player.money += 200
-    
+    #Jail
     elif game_map[player.position].land_type == "Jail":
         player.position = 10
         player.jail_status = 2
 
     
-
+# purchase different types of land
 def buyLand(player, land):
     if player.money >= land.price:
         player.money -= land.price
@@ -196,6 +201,7 @@ def buyLand(player, land):
                 if i.land_type == "Utility":
                     i.level = player.color_count["Utility"] - 1
 
+# make the payment 
 def paid(player, receiver, num):
     if player.money >= num:
         player.money -= num
@@ -210,6 +216,7 @@ def paid(player, receiver, num):
                 return False
     return True
 
+# load game information from csv file
 def loadMap():
     lands = []
     with open("monopoly_space_info.json", "r") as file:
@@ -219,7 +226,7 @@ def loadMap():
     return lands
 
     
-
+# sell land 
 def sellLand(player):
     sell_id = int(input("which to sell\n"))
     while lands[sell_id].level > 0:
