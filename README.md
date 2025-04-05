@@ -63,9 +63,9 @@ Price: int \
 HousePrice: int\
 Color: string\
 ent: list[int]\
-In those variables, Name, Type and Price should be in specifed order.\
+In those variables, Name, Type and Price should be in specifed order.
 
-take_chance.json: This is a JSON file. This file store 10 events and will be selected randomly. Key is their number label and values are cards, their decription and effect. These three variables are stored as String type and specific order is not required. \
+take_chance.json: This is a JSON file. This file store 10 events and will be selected randomly. Key is their number label and values are cards, their decription and effect. These three variables are stored as String type and specific order is not required. 
 
 
 
