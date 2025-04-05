@@ -69,6 +69,4 @@ take_chance.json: This is a JSON file. This file store 10 events and will be sel
 
 
 
-**Test Case**
-
 
