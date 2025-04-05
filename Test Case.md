@@ -11,6 +11,6 @@ Selling land
 
 Turn rotation through the take_turn()
 
- Chance cards and handling their effects
+Chance cards and handling their effects
 
 These interactions can be used to verify that the game's logic, data handling, and GUI features.
