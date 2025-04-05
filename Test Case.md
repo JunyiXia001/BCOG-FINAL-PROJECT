@@ -1,4 +1,4 @@
-1**Test Case**
+**Test Case**
 Testing our program is straightforward. First of all, user need to set the value of the player_num variable to be **greater than 1 and,less than 4** (easier to make verification).
 
 Once the game starts, users can manually interact with the interface to verify key functions, including:
