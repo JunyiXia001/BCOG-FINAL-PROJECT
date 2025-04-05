@@ -50,16 +50,16 @@ buyLand(player, land): pruchase land and player money deduction.\
 paid(player, receiver, num): return boolean variable, and transefer money between players(rent).
 sellLand(player): allowing players to sell their assets.\
 laodMap(): Load information of each space in the map, return the value as list.\
-take_chance(): choose events randomly and return it as a string.\
+take_chance(): choose events randomly and return it as a string.
 
 **Example Uses Case**
 This game designed for people that interested in playing broad game, which allows players to play on computer if they don't have physical cards or board. 
 
 **Input File**
-monopoly_space_info.json: JSON file
-take_chance.json: JSON file
-land.py: python file
-player.py: python file
+monopoly_space_info.json: JSON file\
+take_chance.json: JSON file\
+land.py: python file\
+player.py: python file\
 
 
 **Test Case**
