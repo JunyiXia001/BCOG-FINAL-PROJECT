@@ -52,10 +52,10 @@ sellLand(player): allowing players to sell their assets.\
 laodMap(): Load information of each space in the map, return the value as list.\
 take_chance(): choose events randomly and return it as a string.
 
-**Example Uses Case**
+**Example Uses Case**\
 This game designed for people that interested in playing broad game, which allows players to play on computer if they don't have physical cards or board. 
 
-**Input File**
+**Input File**\
 monopoly_space_info.json: This is a JSON file. This files contains list of 40 ordered space of the map. Here is field name and type: 
 Name: String;\
 Type: String \
