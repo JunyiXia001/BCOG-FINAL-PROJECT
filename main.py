@@ -17,8 +17,9 @@ color_num = {
     "Utility": 2
 }
 game_map = []
+##Junyi Xia 
 ### MainFrame and Map display 
-class Display:
+class Display:   
     screen_size = (1920, 1080)
     def __init__(self):
         #Basic setup of display function 
@@ -113,7 +114,7 @@ class Display:
 #         player_list.pop(0)
     
   
-    
+##Hongyu Xu 
 # Roll dice 
 def roll_die():
     return random.randint(1, 6)
