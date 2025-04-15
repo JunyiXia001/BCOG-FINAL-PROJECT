@@ -16,7 +16,7 @@ color_num = {
     "Dark Blue": 2,
     "Utility": 2
 }
-game_map = []
+
 ##Junyi Xia 
 ### MainFrame and Map display 
 class Display:   
@@ -26,10 +26,11 @@ class Display:
         self.root = tk.Tk()
         self.player_num = 2
         self.init_window()
-        self.game_map = game_map
+        self.game_map = loadMap()
         self.player_list = [Player(i + 1) for i in range(self.player_num)]  
         self.current_player = self.player_list[0]
         self.count = 0
+        self.land = None
     def init_window(self):
         self.root.title("Monopoly Game")
         #Interface
@@ -51,9 +52,9 @@ class Display:
     def create_interface_frame(self):
         roll_dice = tk.Button(self.interface_frame, text="Go", command=self.next_turn, bg="green") 
         roll_dice.pack(side = "right",padx=10, pady=10)
-        build_button = tk.Button(self.interface_frame, text="Build", command=None, bg="yellow") 
+        build_button = tk.Button(self.interface_frame, text="Buy", command=self.call_buy_land, bg="yellow") 
         build_button.pack(side = "left",padx=10, pady=10)
-        sell_button = tk.Button(self.interface_frame, text="Sell", command=None, bg="red") 
+        sell_button = tk.Button(self.interface_frame, text="Sell", command=self.call_sell_land, bg="red") 
         sell_button.pack(side = "right",padx=10,pady=10)
 
     #Create map frame and load map
@@ -83,14 +84,22 @@ class Display:
         self.message("Click Go! to start the game! Good Luck!")
     # connect button with take turn method 
     def next_turn(self):
+        print("Go pressed")
+        land = self.game_map[self.current_player.position]
+   
+        self.message(f"It's {self.current_player.name}'s turn.")
         take_turn(self.game_map, self.player_list, self.current_player, self.count)
         self.player_list.append(self.player_list.pop(0)) 
+        self.message(f"{self.current_player} go to {land.name}. You can lick 'Buy' to purchase.")
         self.current_player = self.player_list[0]
         self.count += 1
     # connect button with buy land method 
     def call_buy_land(self):
-        pass
+        print("Buy pressed")
+        buyLand(self.current_player, self.land)
 
+    def call_sell_land(self):
+        sellLand(self.current_player)
     # setup for message box 
     ## Source from stackoverflow Date: 4/3/2025 Link: https://stackoverflow.com/questions/3842155/is-there-a-way-to-make-the-tkinter-text-widget-read-only?
     def message(self, message):
@@ -98,6 +107,7 @@ class Display:
         self.info_frame.insert("end", message + "\n")
         self.info_frame.see("end")
         self.info_frame.config(state="disabled")
+
 # def main():
 #     #added this line to run the window 
 #     my_display = Display()
@@ -122,6 +132,7 @@ def roll_die():
 # Game logic 
 def take_turn(game_map, player_list, player, count):
     #Check player's jail status
+    
     if player.jail_status > 0:
         player.jail_status -= 1
         choice = int(input("paid, roll, card"))
