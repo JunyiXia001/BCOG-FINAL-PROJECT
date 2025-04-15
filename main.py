@@ -136,7 +136,7 @@ def take_turn(game_map, player_list, player, count):
     
     if player.jail_status > 0:
         player.jail_status -= 1
-        choice = int(input("paid, roll, card"))
+        choice = int(input("paid, roll, wait"))
         if choice == 0:
             player.jail_status = 0
             player.money -= 50
@@ -147,6 +147,9 @@ def take_turn(game_map, player_list, player, count):
                 return
             else:
                 player.jail_status = 0
+        elif choice == 3:
+            return
+        
     die1 = roll_die()
     die2 = roll_die()
     one_more = False
@@ -154,7 +157,16 @@ def take_turn(game_map, player_list, player, count):
     if die1 == die2:
         count+=1
         one_more = True
+    if player.position + die1 + die2 >= 40:
+        print("pass go, get 200")
+        player.money += 200
     player.position = (player.position + die1 + die2) % 40
+
+    # move to jail if continue move for 3 times
+    if count == 3:
+        player.position = 10
+        player.jail_status = 2
+
     #Check the space that players move to
     #Property
     if game_map[player.position].land_type == "Property":
@@ -183,13 +195,23 @@ def take_turn(game_map, player_list, player, count):
                     buyLand(player, game_map[player.position])
             elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
                 paid(player, player_list[game_map[player.position].owner], game_map[player.position].rentNum(die1 + die2))
-    #GO 
-    elif game_map[player.position].land_type == "Go":
-        player.money += 200
     #Jail
     elif game_map[player.position].land_type == "Jail":
         player.position = 10
         player.jail_status = 2
+    #Income tax
+    elif game_map[player.position].land_type == "Income Tax":
+        paid_bank(player, 200)
+    #Luxury Tax
+    elif game_map[player.position].land_type == "Luxury Tax":
+        paid_bank(player, 100)
+    #use previous one_more and count to decide whether the player have another moving chance
+    if one_more == True:
+        take_turn(game_map, player_list, player, count)
+    
+
+    
+        
 
     
 # purchase different types of land
@@ -230,7 +252,21 @@ def paid(player, receiver, num):
                 return False
     return True
 
-# load game information from csv file
+# make the payment to banke
+def paid_bank(player, num):
+    if player.money >= num:
+        player.money -= num
+        return False
+    if player.land_sum >= num:
+        while player.lands:
+            sellLand(player)
+            if player.money >= tmp_money:
+                player.money -= num
+                receiver.money += num
+                return False
+    return True
+
+# load game information from json file
 def loadMap():
     lands = []
     with open("monopoly_space_info.json", "r") as file:

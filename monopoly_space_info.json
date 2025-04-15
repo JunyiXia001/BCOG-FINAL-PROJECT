@@ -3,7 +3,7 @@
     {"Name": "Mediterranean Avenue", "Type": "Property", "Price": 60, "Color": "Purple", "HousePrice": 50, "Rent": [2, 4, 10, 30, 90, 160, 250]},
     {"Name": "Community Chest", "Type": "Card", "Price": 0, "Action": "Draw Community Chest", "Color": "", "HousePrice": 0, "Rent": []},
     {"Name": "Baltic Avenue", "Type": "Property", "Price": 60, "Color": "Purple", "HousePrice": 50, "Rent": [4, 8, 20, 60, 180, 320, 450]},
-    {"Name": "Income Tax", "Type": "Tax", "Action": "Pay $200 or 10%", "Price": 0, "Color": "", "HousePrice": 0, "Rent": []},
+    {"Name": "Income Tax", "Type": "Income Tax", "Action": "Pay $200", "Price": 0, "Color": "", "HousePrice": 0, "Rent": []},
     {"Name": "Reading Railroad", "Type": "Railroad", "Price": 200, "Color": "", "HousePrice": 0, "Rent": [25, 50, 100, 200]},
     {"Name": "Oriental Avenue", "Type": "Property", "Price": 100, "Color": "Light Blue", "HousePrice": 50, "Rent": [6, 12, 30, 90, 270, 400, 550]},
     {"Name": "Chance", "Type": "Card", "Price": 0, "Action": "Draw Chance", "Color": "", "HousePrice": 0, "Rent": []},
@@ -37,6 +37,6 @@
     {"Name": "Short Line", "Type": "Railroad", "Price": 200, "Color": "", "HousePrice": 0, "Rent": [25, 50, 100, 200]},
     {"Name": "Chance", "Type": "Card", "Price": 0, "Action": "Draw Chance", "Color": "", "HousePrice": 0, "Rent": []},
     {"Name": "Park Place", "Type": "Property", "Price": 350, "Color": "Dark Blue", "HousePrice": 200, "Rent": [35, 70, 175, 500, 1100, 1300, 1500]},
-    {"Name": "Luxury Tax", "Type": "Tax", "Price": 0, "Action": "Pay $100", "Color": "", "HousePrice": 0, "Rent": []},
+    {"Name": "Luxury Tax", "Type": "Luxury Tax", "Price": 0, "Action": "Pay $100", "Color": "", "HousePrice": 0, "Rent": []},
     {"Name": "Boardwalk", "Type": "Property", "Price": 400, "Color": "Dark Blue", "HousePrice": 200, "Rent": [50, 100, 200, 600, 1400, 1700, 2000]}
 ]
