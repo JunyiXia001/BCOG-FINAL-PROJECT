@@ -87,6 +87,7 @@ class Display:
         print("Go pressed")
         land = self.game_map[self.current_player.position]
    
+   
         self.message(f"It's {self.current_player.name}'s turn.")
         take_turn(self.game_map, self.player_list, self.current_player, self.count)
         self.player_list.append(self.player_list.pop(0)) 
