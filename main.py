@@ -85,13 +85,15 @@ class Display:
     # connect button with take turn method 
     def next_turn(self):
         print("Go pressed")
-        land = self.game_map[self.current_player.position]
-   
-   
         self.message(f"It's {self.current_player.name}'s turn.")
-        take_turn(self.game_map, self.player_list, self.current_player, self.count)
+        land = self.game_map[self.current_player.position]
+        self.land
+      
+        self.message(f"{self.current_player.name} go to {land.name}.")
+      
+        
+        take_turn(self.game_map, self.player_list, self.current_player, self.count, self.message)
         self.player_list.append(self.player_list.pop(0)) 
-        self.message(f"{self.current_player} go to {land.name}. You can lick 'Buy' to purchase.")
         self.current_player = self.player_list[0]
         self.count += 1
     # connect button with buy land method 
@@ -131,24 +133,24 @@ def roll_die():
     return random.randint(1, 6)
 
 # Game logic 
-def take_turn(game_map, player_list, player, count):
+def take_turn(game_map, player_list, player, count, message):
     #Check player's jail status
     
-    if player.jail_status > 0:
-        player.jail_status -= 1
-        choice = int(input("paid, roll, wait"))
-        if choice == 0:
-            player.jail_status = 0
-            player.money -= 50
-        elif choice == 1:
-            die1 = roll_die()
-            die2 = roll_die()
-            if die1 != die2:
-                return
-            else:
-                player.jail_status = 0
-        elif choice == 3:
-            return
+    # if player.jail_status > 0:
+    #     player.jail_status -= 1
+    #     choice = int(input("paid, roll, wait"))
+    #     if choice == 0:
+    #         player.jail_status = 0
+    #         player.money -= 50
+    #     elif choice == 1:
+    #         die1 = roll_die()
+    #         die2 = roll_die()
+    #         if die1 != die2:
+    #             return
+    #         else:
+    #             player.jail_status = 0
+    #     elif choice == 3:
+    #         return
         
     die1 = roll_die()
     die2 = roll_die()
@@ -172,7 +174,7 @@ def take_turn(game_map, player_list, player, count):
     if game_map[player.position].land_type == "Property":
         if game_map[player.position].pledge == False:
             if game_map[player.position].owner == 0:
-                buy = bool(input("do you want to buy the land?\n"))
+                buy = bool(message("do you want to buy the land?\n"))
                 if buy:
                     buyLand(player, game_map[player.position])
             elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
@@ -181,7 +183,7 @@ def take_turn(game_map, player_list, player, count):
     elif game_map[player.position].land_type == "Railroad":
         if game_map[player.position].pledge == False:
             if game_map[player.position].owner == 0:
-                buy = bool(input("do you want to buy the land?\n"))
+                buy = bool(message("do you want to buy the land?\n"))
                 if buy:
                     buyLand(player, game_map[player.position])
             elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
@@ -190,7 +192,7 @@ def take_turn(game_map, player_list, player, count):
     elif game_map[player.position].land_type == "Utility":
         if game_map[player.position].pledge == False:
             if game_map[player.position].owner == 0:
-                buy = bool(input("do you want to buy the land?\n"))
+                buy = bool(message("do you want to buy the land?\n"))
                 if buy:
                     buyLand(player, game_map[player.position])
             elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
@@ -206,8 +208,10 @@ def take_turn(game_map, player_list, player, count):
     elif game_map[player.position].land_type == "Luxury Tax":
         paid_bank(player, 100)
     #use previous one_more and count to decide whether the player have another moving chance
-    if one_more == True:
-        take_turn(game_map, player_list, player, count)
+    
+    ##BUG
+    # if one_more == True:
+    #     take_turn(game_map, player_list, player, count)
     
 
     
