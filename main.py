@@ -20,7 +20,7 @@ color_num = {
 ##Junyi Xia 
 ### MainFrame and Map display 
 class Display:   
-    screen_size = (1920, 1080)
+    screen_size = (1280, 720)
     def __init__(self):
         #Basic setup of display function 
         self.root = tk.Tk()
@@ -29,8 +29,8 @@ class Display:
         self.game_map = loadMap()
         self.player_list = [Player(i + 1) for i in range(self.player_num)]  
         self.current_player = self.player_list[0]
-        self.count = 0
         self.land = None
+
     def init_window(self):
         self.root.title("Monopoly Game")
         #Interface
@@ -67,6 +67,7 @@ class Display:
         self.rev_img = self.org_img.resize(( self.map_width,self.map_height), Image.Resampling.LANCZOS)
         self.map_img = ImageTk.PhotoImage(self.rev_img)
         self.map_canvas.create_image(self.map_width // 2,self.map_height // 2, image=self.map_img, anchor=tk.CENTER)
+
     #Create information panel 
     def create_information_panel(self):
         panel = tk.Label(self.info_panel, text="Game Information", font=("Times New Roman", 12, "bold"))
@@ -83,33 +84,168 @@ class Display:
         self.message(f"Current player is {self.player_num}. Each player has $1500.")
         self.message("Click Go! to start the game! Good Luck!")
     # connect button with take turn method 
+
     def next_turn(self):
         print("Go pressed")
         self.message(f"It's {self.current_player.name}'s turn.")
-        land = self.game_map[self.current_player.position]
-        self.land
-      
-        self.message(f"{self.current_player.name} go to {land.name}.")
-      
-        
-        take_turn(self.game_map, self.player_list, self.current_player, self.count, self.message)
+        self.message(f"money: {self.current_player.money}")
+        self.take_turn()
         self.player_list.append(self.player_list.pop(0)) 
         self.current_player = self.player_list[0]
-        self.count += 1
     # connect button with buy land method 
+
     def call_buy_land(self):
         print("Buy pressed")
-        buyLand(self.current_player, self.land)
+        self.buyLand()
+        self.message(f"this land is now {self.game_map[self.current_player.position].owner}")
 
     def call_sell_land(self):
         sellLand(self.current_player)
     # setup for message box 
     ## Source from stackoverflow Date: 4/3/2025 Link: https://stackoverflow.com/questions/3842155/is-there-a-way-to-make-the-tkinter-text-widget-read-only?
+
     def message(self, message):
         self.info_frame.config(state="normal")
         self.info_frame.insert("end", message + "\n")
         self.info_frame.see("end")
         self.info_frame.config(state="disabled")
+
+    def take_turn(self):
+        #Check player's jail status
+        
+        # if player.jail_status > 0:
+        #     player.jail_status -= 1
+        #     choice = int(input("paid, roll, wait"))
+        #     if choice == 0:
+        #         player.jail_status = 0
+        #         player.money -= 50
+        #     elif choice == 1:
+        #         die1 = roll_die()
+        #         die2 = roll_die()
+        #         if die1 != die2:
+        #             return
+        #         else:
+        #             player.jail_status = 0
+        #     elif choice == 3:
+        #         return
+            
+        die1 = roll_die()
+        die2 = roll_die()
+        one_more = False
+        #Move
+        if die1 == die2:
+            # count+=1
+            one_more = True
+        if self.current_player.position + die1 + die2 >= 40:
+            print("pass go, get 200")
+            self.current_player.money += 200
+        #for debug fix moving range
+        self.current_player.position = (self.current_player.position + 4) % 40
+        land = self.game_map[self.current_player.position]
+        self.land
+        self.message(f"{self.current_player.name} go to {land.name}.")
+        # self.current_player.position = (self.current_player.position + die1 + die2) % 40
+
+        # move to jail if continue move for 3 times
+        # if count == 3:
+        #     self.current_player.position = 10
+        #     self.current_player.jail_status = 2
+
+        #Check the space that players move to
+        #Property
+        if self.game_map[self.current_player.position].land_type == "Property":
+            if self.game_map[self.current_player.position].pledge == False:
+                if self.game_map[self.current_player.position].owner == 0:
+                    self.message("do you want to buy the land?\n")
+                    # buy = bool(input("0: no, 1: yes"))
+                    # if buy:
+                    #     self.buyLand()
+                elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
+                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rentNum())
+        #Railroad
+        elif self.game_map[self.current_player.position].land_type == "Railroad":
+            if self.game_map[self.current_player.position].pledge == False:
+                if self.game_map[self.current_player.position].owner == 0:
+                    self.message("do you want to buy the land?\n")
+                    # buy = bool(input("0: no, 1: yes"))
+                    # if buy:
+                    #     self.buyLand()
+                elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
+                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rentNum())
+        #Utility
+        elif self.game_map[self.current_player.position].land_type == "Utility":
+            if self.game_map[self.current_player.position].pledge == False:
+                if self.game_map[self.current_player.position].owner == 0:
+                    self.message("do you want to buy the land?\n")
+                    # buy = bool(input("0: no, 1: yes"))
+                    # if buy:
+                    #     self.buyLand()
+                elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
+                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rentNum(die1 + die2))
+        #Jail
+        elif self.game_map[self.current_player.position].land_type == "Jail":
+            self.current_player.position = 10
+            self.current_player.jail_status = 2
+        #Income tax
+        elif self.game_map[self.current_player.position].land_type == "Income Tax":
+            self.paid_bank(200)
+        #Luxury Tax
+        elif self.game_map[self.current_player.position].land_type == "Luxury Tax":
+            self.paid_bank(100)
+        #use previous one_more and count to decide whether the player have another moving chance
+        
+        ##BUG
+        # if one_more == True:
+        #     take_turn(game_map, player_list, player, count)
+    def buyLand(self):
+        self.message(f"is {self.current_player.name} buying")
+        if self.current_player.money >= self.game_map[self.current_player.position].price:
+            self.current_player.money -= self.game_map[self.current_player.position].price
+            self.current_player.lands.append(self.game_map[self.current_player.position])
+            self.game_map[self.current_player.position].owner = self.current_player.id
+            if self.game_map[self.current_player.position].land_type == "Property":
+                self.current_player.color_count[self.game_map[self.current_player.position].color] += 1
+                if self.current_player.color_count[self.game_map[self.current_player.position].color] == color_num[self.game_map[self.current_player.position].color]:
+                    for i in self.current_player.lands:
+                        if i.color == self.game_map[self.current_player.position].color:
+                            i.level = 1
+            elif self.game_map[self.current_player.position].land_type == "Railroad":
+                self.current_player.color_count["Railroad"] += 1
+                for i in self.current_player.lands:
+                    if i.land_type == "Railroad":
+                        i.level = self.current_player.color_count["Railroad"] - 1
+            elif self.game_map[self.current_player.position].land_type == "Utility":
+                self.current_player.color_count["Utility"] += 1
+                for i in self.current_player.lands:
+                    if i.land_type == "Utility":
+                        i.level = self.current_player.color_count["Utility"] - 1
+
+    def paid(self, player, receiver, num):
+        self.message(f"{player} pay {receiver} {num}")
+        if self.player_list[player].money >= num:
+            self.player_list[player].money -= num
+            self.player_list[receiver].money += num
+            return False
+        if self.player_list[player].land_sum >= num:
+            while self.player_list[player].lands:
+                sellLand(player)
+                if self.player_list[player].money >= tmp_money:
+                    self.player_list[player].money -= num
+                    self.player_list[receiver].money += num
+                    return False
+        return True
+
+    def paid_bank(self, num):
+        if self.current_player.money >= num:
+            self.current_player.money -= num
+            return False
+        if self.current_player.land_sum >= num:
+            while self.current_player.lands:
+                sellLand(self.current_player)
+                if self.current_player.money >= tmp_money:
+                    self.current_player.money -= num
+                    return False
+        return True
 
 # def main():
 #     #added this line to run the window 
@@ -132,86 +268,8 @@ class Display:
 def roll_die():
     return random.randint(1, 6)
 
-# Game logic 
-def take_turn(game_map, player_list, player, count, message):
-    #Check player's jail status
-    
-    # if player.jail_status > 0:
-    #     player.jail_status -= 1
-    #     choice = int(input("paid, roll, wait"))
-    #     if choice == 0:
-    #         player.jail_status = 0
-    #         player.money -= 50
-    #     elif choice == 1:
-    #         die1 = roll_die()
-    #         die2 = roll_die()
-    #         if die1 != die2:
-    #             return
-    #         else:
-    #             player.jail_status = 0
-    #     elif choice == 3:
-    #         return
-        
-    die1 = roll_die()
-    die2 = roll_die()
-    one_more = False
-    #Move
-    if die1 == die2:
-        count+=1
-        one_more = True
-    if player.position + die1 + die2 >= 40:
-        print("pass go, get 200")
-        player.money += 200
-    player.position = (player.position + die1 + die2) % 40
 
-    # move to jail if continue move for 3 times
-    if count == 3:
-        player.position = 10
-        player.jail_status = 2
 
-    #Check the space that players move to
-    #Property
-    if game_map[player.position].land_type == "Property":
-        if game_map[player.position].pledge == False:
-            if game_map[player.position].owner == 0:
-                buy = bool(message("do you want to buy the land?\n"))
-                if buy:
-                    buyLand(player, game_map[player.position])
-            elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
-                paid(player, player_list[game_map[player.position].owner], game_map[player.position].rentNum())
-    #Railroad
-    elif game_map[player.position].land_type == "Railroad":
-        if game_map[player.position].pledge == False:
-            if game_map[player.position].owner == 0:
-                buy = bool(message("do you want to buy the land?\n"))
-                if buy:
-                    buyLand(player, game_map[player.position])
-            elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
-                paid(player, player_list[game_map[player.position].owner], game_map[player.position].rentNum())
-    #Utility
-    elif game_map[player.position].land_type == "Utility":
-        if game_map[player.position].pledge == False:
-            if game_map[player.position].owner == 0:
-                buy = bool(message("do you want to buy the land?\n"))
-                if buy:
-                    buyLand(player, game_map[player.position])
-            elif game_map[player.position].owner != 0 and game_map[player.position].owner != player.id:
-                paid(player, player_list[game_map[player.position].owner], game_map[player.position].rentNum(die1 + die2))
-    #Jail
-    elif game_map[player.position].land_type == "Jail":
-        player.position = 10
-        player.jail_status = 2
-    #Income tax
-    elif game_map[player.position].land_type == "Income Tax":
-        paid_bank(player, 200)
-    #Luxury Tax
-    elif game_map[player.position].land_type == "Luxury Tax":
-        paid_bank(player, 100)
-    #use previous one_more and count to decide whether the player have another moving chance
-    
-    ##BUG
-    # if one_more == True:
-    #     take_turn(game_map, player_list, player, count)
     
 
     
@@ -219,56 +277,13 @@ def take_turn(game_map, player_list, player, count, message):
 
     
 # purchase different types of land
-def buyLand(player, land):
-    if player.money >= land.price:
-        player.money -= land.price
-        player.lands.append(land)
-        land.owner = player.id
-        if land.land_type == "Property":
-            player.color_count[land.color] += 1
-            if player.color_count[land.color] == color_num[land.color]:
-                for i in player.lands:
-                    if i.color == land.color:
-                        i.level = 1
-        elif land.land_type == "Railroad":
-            player.color_count["Railroad"] += 1
-            for i in player.lands:
-                if i.land_type == "Railroad":
-                    i.level = player.color_count["Railroad"] - 1
-        elif land.land_type == "Utility":
-            player.color_count["Utility"] += 1
-            for i in player.lands:
-                if i.land_type == "Utility":
-                    i.level = player.color_count["Utility"] - 1
+
 
 # make the payment 
-def paid(player, receiver, num):
-    if player.money >= num:
-        player.money -= num
-        receiver.money += num
-        return False
-    if player.land_sum >= num:
-        while player.lands:
-            sellLand(player)
-            if player.money >= tmp_money:
-                player.money -= num
-                receiver.money += num
-                return False
-    return True
+
 
 # make the payment to banke
-def paid_bank(player, num):
-    if player.money >= num:
-        player.money -= num
-        return False
-    if player.land_sum >= num:
-        while player.lands:
-            sellLand(player)
-            if player.money >= tmp_money:
-                player.money -= num
-                receiver.money += num
-                return False
-    return True
+
 
 # load game information from json file
 def loadMap():

@@ -10,14 +10,13 @@ class Land:
         self.house_price = house_price
         self.color = color
 
-    def rentNum(self):
-        return self.rent[self.level]
-
-    def rentNum(self, die):
+    def rentNum(self, die=None):
+        if die is None:
+            return self.rent[self.level]
         if self.level == 0:
-            return die*4
+            return die * 4
         else:
-            return die*10
+            return die * 10
 
     def __str__(self):
         return self.name
