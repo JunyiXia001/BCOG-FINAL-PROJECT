@@ -96,7 +96,7 @@ class Display:
 
     def call_buy_land(self):
         print("Buy pressed")
-        self.buyLand()
+        self.buy_Land()
         self.message(f"this land is now {self.game_map[self.current_player.position].owner}")
 
     def call_sell_land(self):
@@ -197,7 +197,8 @@ class Display:
         ##BUG
         # if one_more == True:
         #     take_turn(game_map, player_list, player, count)
-    def buyLand(self):
+        
+    def buy_Land(self):
         self.message(f"is {self.current_player.name} buying")
         if self.current_player.money >= self.game_map[self.current_player.position].price:
             self.current_player.money -= self.game_map[self.current_player.position].price
@@ -246,7 +247,6 @@ class Display:
                     self.current_player.money -= num
                     return False
         return True
-
 # def main():
 #     #added this line to run the window 
 #     my_display = Display()
