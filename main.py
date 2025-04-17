@@ -46,16 +46,20 @@ class Display:
         self.map_frame.grid(row=0, column=0)
         self.create_map_frame()
         self.create_interface_frame()
+        self.buy_button.pack_forget()
+        self.End_button.pack_forget()
         self.create_information_panel()
     
     #Create interface frame and buttons 
     def create_interface_frame(self):
-        roll_dice = tk.Button(self.interface_frame, text="Go", command=self.next_turn, bg="green") 
-        roll_dice.pack(side = "right",padx=10, pady=10)
-        build_button = tk.Button(self.interface_frame, text="Buy", command=self.call_buy_land, bg="yellow") 
-        build_button.pack(side = "left",padx=10, pady=10)
-        sell_button = tk.Button(self.interface_frame, text="Sell", command=self.call_sell_land, bg="red") 
-        sell_button.pack(side = "right",padx=10,pady=10)
+        self.take_turn_button = tk.Button(self.interface_frame, text="Go", command=self.call_take_turn, bg="green") 
+        self.take_turn_button.pack(side = "right",padx=10, pady=10)
+        self.buy_button = tk.Button(self.interface_frame, text="Buy", command=self.call_buy_land, bg="yellow") 
+        self.buy_button.pack(side = "left",padx=10, pady=10)
+        self.sell_button = tk.Button(self.interface_frame, text="Sell", command=self.call_sell_land, bg="red") 
+        self.sell_button.pack(side = "right",padx=10,pady=10)
+        self.End_button = tk.Button(self.interface_frame, text="End", command=self.call_end, bg="yellow") 
+        self.End_button.pack(side = "right",padx=10,pady=10)
 
     #Create map frame and load map
     def create_map_frame(self):
@@ -82,27 +86,37 @@ class Display:
         scrollbar.config(command=self.info_frame.yview)
         self.message("Welcome to Monopoly Game")
         self.message(f"Current player is {self.player_num}. Each player has $1500.")
-        self.message("Click Go! to start the game! Good Luck!")
+        self.message("Click Go! to start the game! Good Luck!\n")
     # connect button with take turn method 
 
-    def next_turn(self):
+    def call_take_turn(self):
         print("Go pressed")
         self.message(f"It's {self.current_player.name}'s turn.")
         self.message(f"money: {self.current_player.money}")
         self.take_turn()
-        self.player_list.append(self.player_list.pop(0)) 
-        self.current_player = self.player_list[0]
+        # self.buy_button.pack_forget()
+        self.take_turn_button.pack_forget()
+        self.End_button.pack(side = "right",padx=10,pady=10)
+        # self.player_list.append(self.player_list.pop(0)) 
+        # self.current_player = self.player_list[0]
     # connect button with buy land method 
 
     def call_buy_land(self):
         print("Buy pressed")
         self.buy_Land()
-        self.message(f"this land is now {self.game_map[self.current_player.position].owner}")
+        self.message(f"this land is now {self.game_map[self.current_player.position].owner}\n")
+        self.buy_button.pack_forget()
 
     def call_sell_land(self):
         sellLand(self.current_player)
     # setup for message box 
     ## Source from stackoverflow Date: 4/3/2025 Link: https://stackoverflow.com/questions/3842155/is-there-a-way-to-make-the-tkinter-text-widget-read-only?
+
+    def call_end(self):
+        self.End_button.pack_forget()
+        self.player_list.append(self.player_list.pop(0)) 
+        self.current_player = self.player_list[0]
+        self.take_turn_button.pack(side = "right",padx=10, pady=10)
 
     def message(self, message):
         self.info_frame.config(state="normal")
@@ -137,13 +151,13 @@ class Display:
             # count+=1
             one_more = True
         if self.current_player.position + die1 + die2 >= 40:
-            print("pass go, get 200")
+            self.message("pass go, get 200\n")
             self.current_player.money += 200
         #for debug fix moving range
         self.current_player.position = (self.current_player.position + 4) % 40
         land = self.game_map[self.current_player.position]
         self.land
-        self.message(f"{self.current_player.name} go to {land.name}.")
+        self.message(f"{self.current_player.name} go to {land.name}.\n")
         # self.current_player.position = (self.current_player.position + die1 + die2) % 40
 
         # move to jail if continue move for 3 times
@@ -157,6 +171,7 @@ class Display:
             if self.game_map[self.current_player.position].pledge == False:
                 if self.game_map[self.current_player.position].owner == 0:
                     self.message("do you want to buy the land?\n")
+                    self.buy_button.pack(side = "right",padx=10, pady=10)
                     # buy = bool(input("0: no, 1: yes"))
                     # if buy:
                     #     self.buyLand()
@@ -167,6 +182,7 @@ class Display:
             if self.game_map[self.current_player.position].pledge == False:
                 if self.game_map[self.current_player.position].owner == 0:
                     self.message("do you want to buy the land?\n")
+                    self.buy_button.pack(side = "right",padx=10, pady=10)
                     # buy = bool(input("0: no, 1: yes"))
                     # if buy:
                     #     self.buyLand()
@@ -177,6 +193,7 @@ class Display:
             if self.game_map[self.current_player.position].pledge == False:
                 if self.game_map[self.current_player.position].owner == 0:
                     self.message("do you want to buy the land?\n")
+                    self.buy_button.pack(side = "right",padx=10, pady=10)
                     # buy = bool(input("0: no, 1: yes"))
                     # if buy:
                     #     self.buyLand()
@@ -222,7 +239,7 @@ class Display:
                         i.level = self.current_player.color_count["Utility"] - 1
 
     def paid(self, player, receiver, num):
-        self.message(f"{player} pay {receiver} {num}")
+        self.message(f"{self.player_list[player].name} pay {self.player_list[receiver].name} money by {num}")
         if self.player_list[player].money >= num:
             self.player_list[player].money -= num
             self.player_list[receiver].money += num
