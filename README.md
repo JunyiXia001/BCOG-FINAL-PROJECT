@@ -2,7 +2,7 @@
 ## Topic: Monopoly
 Our program is a simple simulator of the board game "Monopoly." Monopoly is an economic-themed broad game, and players will roll dice to make decisions and move on the board, such as purchasing land, paying rent, or having special events. Finally, the player with the most money will win the game and lose when the player goes bankrupt. 
 
-### Function A:**
+### **Function A:**
 This is the main function that allows players to choose the action term by term. 
 
 ### **Function B:**
@@ -39,7 +39,7 @@ The logic of our program is sperated into two major parts which are game logic a
 
 ## **Function description**
 Display class\
--visualization of the game (Map, information panel, buttons)\
+•visualization of the game (Map, information panel, buttons)
 ## **Function**
 •create_map_frame(), create_interface_frame(), create_information_panel(): game UI components.\
 •next_turn():advances to the next player's turn.\
@@ -66,7 +66,7 @@ Color: string\
 ent: list[int]\
 In those variables, Name, Type and Price should be in specifed order.
 
-•take_chance.json: This is a JSON file. This file store 10 events and will be selected randomly. Key is their number label and values are cards, their decription and effect. These three variables are stored as String type and specific order is not required. \
+•take_chance.json: This is a JSON file. This file store 10 events and will be selected randomly. Key is their number label and values are cards, their decription and effect. These three variables are stored as String type and specific order is not required. 
 
 •land.py: this is a python file which contains the basic logic of our program.
 
