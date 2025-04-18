@@ -176,7 +176,7 @@ class Display:
                     # if buy:
                     #     self.buyLand()
                 elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
-                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rentNum())
+                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rent_Num())
         #Railroad
         elif self.game_map[self.current_player.position].land_type == "Railroad":
             if self.game_map[self.current_player.position].pledge == False:
@@ -187,7 +187,7 @@ class Display:
                     # if buy:
                     #     self.buyLand()
                 elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
-                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rentNum())
+                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rent_Num())
         #Utility
         elif self.game_map[self.current_player.position].land_type == "Utility":
             if self.game_map[self.current_player.position].pledge == False:
@@ -198,7 +198,7 @@ class Display:
                     # if buy:
                     #     self.buyLand()
                 elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
-                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rentNum(die1 + die2))
+                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rent_Num(die1 + die2))
         #Jail
         elif self.game_map[self.current_player.position].land_type == "Jail":
             self.current_player.position = 10
