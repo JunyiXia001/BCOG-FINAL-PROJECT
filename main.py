@@ -26,7 +26,7 @@ class Display:
         self.root = tk.Tk()
         self.player_num = 2
         self.init_window()
-        self.game_map = loadMap()
+        self.game_map = load_Map()
         self.player_list = [Player(i + 1) for i in range(self.player_num)]  
         self.current_player = self.player_list[0]
         self.land = None
@@ -78,12 +78,12 @@ class Display:
         panel.pack(pady=(5,5))
         panel_frame = tk.Frame(self.info_panel)
         panel_frame.pack(fill="both", expand=True, padx=10, pady=5)
-        scrollbar = tk.Scrollbar(panel_frame)
-        scrollbar.pack(side="right", fill="y")
+        scroll_bar = tk.Scrollbar(panel_frame)
+        scroll_bar.pack(side="right", fill="y")
     #Create message box 
-        self.info_frame = tk.Text(panel_frame, wrap="word", height=30, width=50, yscrollcommand=scrollbar.set, state="disabled")
+        self.info_frame = tk.Text(panel_frame, wrap="word", height=30, width=50, yscrollcommand=scroll_bar.set, state="disabled")
         self.info_frame.pack(side="left", fill="both", expand=True)
-        scrollbar.config(command=self.info_frame.yview)
+        scroll_bar.config(command=self.info_frame.yview)
         self.message("Welcome to Monopoly Game")
         self.message(f"Current player is {self.player_num}. Each player has $1500.")
         self.message("Click Go! to start the game! Good Luck!\n")
@@ -108,7 +108,7 @@ class Display:
         self.buy_button.pack_forget()
 
     def call_sell_land(self):
-        sellLand(self.current_player)
+        sell_Land(self.current_player)
     # setup for message box 
     ## Source from stackoverflow Date: 4/3/2025 Link: https://stackoverflow.com/questions/3842155/is-there-a-way-to-make-the-tkinter-text-widget-read-only?
 
@@ -246,7 +246,7 @@ class Display:
             return False
         if self.player_list[player].land_sum >= num:
             while self.player_list[player].lands:
-                sellLand(player)
+                sell_Land(player)
                 if self.player_list[player].money >= tmp_money:
                     self.player_list[player].money -= num
                     self.player_list[receiver].money += num
@@ -259,7 +259,7 @@ class Display:
             return False
         if self.current_player.land_sum >= num:
             while self.current_player.lands:
-                sellLand(self.current_player)
+                sell_Land(self.current_player)
                 if self.current_player.money >= tmp_money:
                     self.current_player.money -= num
                     return False
@@ -303,7 +303,7 @@ def roll_die():
 
 
 # load game information from json file
-def loadMap():
+def load_Map():
     lands = []
     with open("monopoly_space_info.json", "r") as file:
         land_dict = json.load(file)
@@ -313,7 +313,7 @@ def loadMap():
 
     
 # sell land 
-def sellLand(player):
+def sell_Land(player):
     sell_id = int(input("which to sell\n"))
     while lands[sell_id].level > 0:
         degrade = bool(input("sell the house?"))

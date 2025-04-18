@@ -10,7 +10,7 @@ class Land:
         self.house_price = house_price
         self.color = color
 
-    def rentNum(self, die=None):
+    def rent_Num(self, die=None):
         if die is None:
             return self.rent[self.level]
         if self.level == 0:
