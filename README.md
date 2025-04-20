@@ -1,6 +1,6 @@
 # BCOG-FINAL-PROJECT
 ## Topic: Monopoly
-Our program is a simple simulator of the board game "Monopoly." Monopoly is an economic-themed broad game, and players will roll dice to make decisions and move on the board, such as purchasing land, paying rent, or having special events. Finally, the player with the most money will win the game and lose when the player goes bankrupt. 
+Our program is a simple simulator of the board game "Monopoly." Monopoly is an economic-themed board game, and players will roll dice to make decisions and move on the board, such as purchasing land, paying rent, or having special events. Finally, the player with the most money will win the game and lose when the player goes bankrupt. 
 
 ### **Function A:**
 This is the main function that allows players to choose the action term by term. 
@@ -29,13 +29,13 @@ Members in our group communicate through webchat and zoom. We will have 2 meetin
 
 
 ## **Documentatation**
-The logic of our program is sperated into two major parts which are game logic and it's visualization. Our program mimics the Monopoly broad game through Tkinter and load map data through JSON file.Our program have four major components：
+The logic of our program is seperated into two major parts which are game logic and it's visualization. Our program mimics the Monopoly broad game through Tkinter and load map data through JSON file.Our program has four major components：
 
 •Display class visualizes the game.\
 •Take_turn method provides the main logic of the game (movememt, place tracking, space info)\
 •Load Map function provide the information of each space in the game.\
 •Buyland, sell land functions allow players to manage their assets.\
-•Take chance function generates random events from a set of predefined Chance cards.\
+•Take chance function generates random events from a set of predefined Chance cards.
 
 ## **Function description**
 Display class\
@@ -55,7 +55,7 @@ Display class\
 ## **Example Uses Case**
 This game designed for people that interested in playing broad game, which allows players to play on computer if they don't have physical cards or board. 
 
-## **Input File**
+## **Input File** 
 •monopoly_space_info.json: This is a JSON file. This files contains list of 40 ordered space of the map. Here is field name and type:
 Variable type:
 Name: String;\
