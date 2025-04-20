@@ -67,7 +67,7 @@ class Display:
         self.map_height = self.screen_size[1] - self.interface_height
         self.map_canvas = tk.Canvas(self.map_frame, width=self.map_width, height =self.map_height)
         self.map_canvas.pack(fill="both", expand=True)
-        self.org_img = Image.open("monopoly.png") 
+        self.org_img = Image.open("Image/monopoly.png") 
         self.rev_img = self.org_img.resize(( self.map_width,self.map_height), Image.Resampling.LANCZOS)
         self.map_img = ImageTk.PhotoImage(self.rev_img)
         self.map_canvas.create_image(self.map_width // 2,self.map_height // 2, image=self.map_img, anchor=tk.CENTER)
@@ -305,7 +305,7 @@ def roll_die():
 # load game information from json file
 def load_Map():
     lands = []
-    with open("monopoly_space_info.json", "r") as file:
+    with open("Json/monopoly_space_info.json", "r") as file:
         land_dict = json.load(file)
     for i in range(len(land_dict)):
         lands.append(Land(land_dict[i]["Name"], land_dict[i]["Type"], land_dict[i]["HousePrice"], land_dict[i]["Color"], land_dict[i]["Price"], land_dict[i]["Rent"]))
@@ -330,7 +330,7 @@ def sell_Land(player):
 
 ## chance situation
 def take_chance():
-    with open("take_chance.json") as file_handle:
+    with open("Json/take_chance.json") as file_handle:
         chance_card = file_handle.read()
     card_dict = json.loads(chance_card)
     num = random.randint(0,10)
