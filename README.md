@@ -47,7 +47,7 @@ Display class\
 •message():print message in the information panel; takes string as an input.\
 •roll_die(): return a random int between 1 and 6.\
 •buyLand(player, land): pruchase land and player money deduction.\
-•paid(player, receiver, num): return boolean variable, and transefer money between players(rent).
+•paid(player, receiver, num): return boolean variable, and transefer money between players(rent).\
 •sellLand(player): allowing players to sell their assets.\
 •laodMap(): Load information of each space in the map, return the value as list.\
 •take_chance(): choose events randomly and return it as a string.
