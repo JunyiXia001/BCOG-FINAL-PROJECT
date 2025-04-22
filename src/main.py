@@ -70,7 +70,9 @@ class Display:
         self.org_img = Image.open("Image/monopoly.png") 
         self.rev_img = self.org_img.resize(( self.map_width,self.map_height), Image.Resampling.LANCZOS)
         self.map_img = ImageTk.PhotoImage(self.rev_img)
-        self.map_canvas.create_image(self.map_width // 2,self.map_height // 2, image=self.map_img, anchor=tk.CENTER)
+        self.map_canvas.create_image(self.map_width // 2,self.map_height // 2, image=self.map_img, anchor=tk.CENTER, tags="map_image")
+  
+
 
     #Create information panel 
     def create_information_panel(self):
@@ -158,6 +160,7 @@ class Display:
         land = self.game_map[self.current_player.position]
         self.land
         self.message(f"{self.current_player.name} go to {land.name}.\n")
+        self.player_icon(land.location)
         # self.current_player.position = (self.current_player.position + die1 + die2) % 40
 
         # move to jail if continue move for 3 times
@@ -210,6 +213,7 @@ class Display:
         elif self.game_map[self.current_player.position].land_type == "Luxury Tax":
             self.paid_bank(100)
         #use previous one_more and count to decide whether the player have another moving chance
+        
         
         ##BUG
         # if one_more == True:
@@ -264,6 +268,32 @@ class Display:
                     self.current_player.money -= num
                     return False
         return True
+    
+
+    # Player visualization 
+    def player_icon(self, location_input):
+
+        if location_input is None:
+            ("Location not found")
+            return
+            
+        print("icon created")
+        self.map_canvas.delete("player_icon")
+        x, y = location_input
+        size = 50
+        # setting = size // 2
+        
+        self.map_canvas.create_rectangle(
+        x , y , x + size , y + size,
+        fill='green',
+        outline='black',
+        width=2, tags="player_icon")
+        self.map_canvas.tag_raise("player_icon")
+        self.map_canvas.tag_lower("map_image")
+        print(f"icon created, {location_input}")
+
+
+        
 # def main():
 #     #added this line to run the window 
 #     my_display = Display()
@@ -305,12 +335,25 @@ def roll_die():
 # load game information from json file
 def load_Map():
     lands = []
+    with open("Json/space_location.json", "r") as file:
+        loc_info = json.load(file)
     with open("Json/monopoly_space_info.json", "r") as file:
         land_dict = json.load(file)
     for i in range(len(land_dict)):
-        lands.append(Land(land_dict[i]["Name"], land_dict[i]["Type"], land_dict[i]["HousePrice"], land_dict[i]["Color"], land_dict[i]["Price"], land_dict[i]["Rent"]))
+        loc = loc_info[str(i)]
+        lands.append(Land(land_dict[i]["Name"], land_dict[i]["Type"], land_dict[i]["HousePrice"], land_dict[i]["Color"], land_dict[i]["Price"], land_dict[i]["Rent"], location=loc))
+  
+        
+
     return lands
 
+def load_location():
+    location = []
+    with open("Json/space_location.json", "r") as file:
+        loc_info = json.load(file)
+    for i in range(len(loc_info)):
+        location.append(loc_info[str(i)])
+    return location
     
 # sell land 
 def sell_Land(player):
