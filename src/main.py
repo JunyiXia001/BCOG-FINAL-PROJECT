@@ -280,7 +280,7 @@ class Display:
         print("icon created")
         self.map_canvas.delete("player_icon")
         x, y = location_input
-        size = 50
+        size = 25
         # setting = size // 2
         
         self.map_canvas.create_rectangle(
