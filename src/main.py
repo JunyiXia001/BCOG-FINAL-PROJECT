@@ -156,7 +156,7 @@ class Display:
             self.message("pass go, get 200\n")
             self.current_player.money += 200
         #for debug fix moving range
-        self.current_player.position = (self.current_player.position + 1) % 40
+        self.current_player.position = (self.current_player.position + 8) % 40
         land = self.game_map[self.current_player.position]
         self.land
         self.message(f"{self.current_player.name} go to {land.name}.\n")
@@ -281,7 +281,6 @@ class Display:
         self.map_canvas.delete("player_icon")
         x, y = location_input
         size = 20
-        # setting = size // 2
         
         self.map_canvas.create_rectangle(
         x , y , x + size , y + size,
