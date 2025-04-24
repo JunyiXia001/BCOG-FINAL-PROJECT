@@ -27,7 +27,18 @@ class Display:
         self.player_num = 2
         self.init_window()
         self.game_map = load_Map()
-        self.player_list = [Player(i + 1) for i in range(self.player_num)]  
+        self.player_list = [Player(i + 1) for i in range(self.player_num)] 
+        # for i in self.player_list:
+        #     x, y = self.game_map[0].location
+        #     size = 20
+        #     self.map_canvas.create_rectangle(
+        #     x , y , x + size , y + size,
+        #     fill='green',
+        #     outline='black',
+        #     width=2, tags=i.id)
+        #     self.map_canvas.tag_raise(i.id)
+        #     self.map_canvas.tag_lower("map_image")
+    
         self.current_player = self.player_list[0]
         self.land = None
 
@@ -160,7 +171,7 @@ class Display:
         land = self.game_map[self.current_player.position]
         self.land
         self.message(f"{self.current_player.name} go to {land.name}.\n")
-        self.player_icon(land.location)
+        self.player_icon(land.location, self.current_player.id)
         # self.current_player.position = (self.current_player.position + die1 + die2) % 40
 
         # move to jail if continue move for 3 times
@@ -271,14 +282,16 @@ class Display:
     
 
     # Player visualization 
-    def player_icon(self, location_input):
+    def player_icon(self, location_input, id):
 
         if location_input is None:
             ("Location not found")
             return
             
         print("icon created")
-        self.map_canvas.delete("player_icon")
+        if id is not :
+            return
+        # self.map_canvas.delete(id)
         x, y = location_input
         size = 20
         
@@ -286,8 +299,8 @@ class Display:
         x , y , x + size , y + size,
         fill='green',
         outline='black',
-        width=2, tags="player_icon")
-        self.map_canvas.tag_raise("player_icon")
+        width=2, tags=id)
+        self.map_canvas.tag_raise(id)
         self.map_canvas.tag_lower("map_image")
         print(f"icon created, {location_input}")
 
