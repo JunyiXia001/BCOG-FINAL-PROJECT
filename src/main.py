@@ -4,6 +4,7 @@ import random
 import tkinter as tk
 from PIL import Image, ImageTk
 import json
+from tkinter import ttk
 color_num = {
     "Railroad": 4,
     "Purple": 2,
@@ -130,7 +131,36 @@ class Display:
         self.buy_button.pack_forget()
 
     def call_sell_land(self):
-        sell_Land(self.current_player)
+        sell_interface = tk.Toplevel()
+        sell_interface.title("Choose an Image")
+        sell_interface.geometry("800x600")
+
+        images_info = []
+        for land in self.current_player.lands:
+            if land.level >= 2:
+                images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling house, price is {land.house_price/2}"})
+            else:
+                images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling lands, price is {int(land.price*0.7)}"})
+        frame = tk.Frame(sell_interface)
+        frame.pack(pady=20)
+
+        self.photo_images = [] 
+        for i, info in enumerate(images_info):
+            img = Image.open(info['path'])
+            img = img.resize((200, 200)) 
+            photo = ImageTk.PhotoImage(img)
+            self.photo_images.append(photo)  
+
+            img_label = tk.Label(frame, image=photo)
+            img_label.grid(row=0, column=i, padx=10)
+
+            desc_label = tk.Label(frame, text=info['description'], wraplength=180)
+            desc_label.grid(row=2, column=i)
+
+            select_button = tk.Button(frame, text="Select", command=lambda i=i: select_image(i))
+            select_button.grid(row=3, column=i, pady=10)
+
+        sell_interface.mainloop()
     # setup for message box 
     ## Source from stackoverflow Date: 4/3/2025 Link: https://stackoverflow.com/questions/3842155/is-there-a-way-to-make-the-tkinter-text-widget-read-only?
 
@@ -176,7 +206,7 @@ class Display:
             self.message("pass go, get 200\n")
             self.current_player.money += 200
         #for debug fix moving range
-        self.current_player.position = (self.current_player.position + 8) % 40
+        self.current_player.position = (self.current_player.position + 1) % 40
         land = self.game_map[self.current_player.position]
         self.message(f"{self.current_player.name} go to {land.name}.\n")
         self.move_player_icon(land.location, self.current_player.id)
@@ -249,7 +279,8 @@ class Display:
                 if self.current_player.color_count[self.game_map[self.current_player.position].color] == color_num[self.game_map[self.current_player.position].color]:
                     for i in self.current_player.lands:
                         if i.color == self.game_map[self.current_player.position].color:
-                            i.level = 1
+                            if i.level == 0:
+                                i.level += 1
             elif self.game_map[self.current_player.position].land_type == "Railroad":
                 self.current_player.color_count["Railroad"] += 1
                 for i in self.current_player.lands:
