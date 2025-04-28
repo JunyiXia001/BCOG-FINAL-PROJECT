@@ -28,6 +28,16 @@ class Display:
         self.init_window()
         self.game_map = load_Map()
         self.player_list = [Player(i + 1) for i in range(self.player_num)] 
+        self.player_icon = []
+        for player in self.player_list:
+            x, y = self.game_map[0].location
+            size = 20
+            rec = self.map_canvas.create_rectangle(
+            x , y , x + size , y + size,
+            fill='green',
+            outline='black',
+            width=2, tag = player.id)
+            self.player_icon.append(rec)
         # for i in self.player_list:
         #     x, y = self.game_map[0].location
         #     size = 20
@@ -82,6 +92,7 @@ class Display:
         self.rev_img = self.org_img.resize(( self.map_width,self.map_height), Image.Resampling.LANCZOS)
         self.map_img = ImageTk.PhotoImage(self.rev_img)
         self.map_canvas.create_image(self.map_width // 2,self.map_height // 2, image=self.map_img, anchor=tk.CENTER, tags="map_image")
+        
   
 
 
@@ -103,7 +114,6 @@ class Display:
     # connect button with take turn method 
 
     def call_take_turn(self):
-        print("Go pressed")
         self.message(f"It's {self.current_player.name}'s turn.")
         self.message(f"money: {self.current_player.money}")
         self.take_turn()
@@ -115,7 +125,6 @@ class Display:
     # connect button with buy land method 
 
     def call_buy_land(self):
-        print("Buy pressed")
         self.buy_Land()
         self.message(f"this land is now {self.game_map[self.current_player.position].owner}\n")
         self.buy_button.pack_forget()
@@ -169,9 +178,8 @@ class Display:
         #for debug fix moving range
         self.current_player.position = (self.current_player.position + 8) % 40
         land = self.game_map[self.current_player.position]
-        self.land
         self.message(f"{self.current_player.name} go to {land.name}.\n")
-        self.player_icon(land.location, self.current_player.id)
+        self.move_player_icon(land.location, self.current_player.id)
         # self.current_player.position = (self.current_player.position + die1 + die2) % 40
 
         # move to jail if continue move for 3 times
@@ -282,27 +290,24 @@ class Display:
     
 
     # Player visualization 
-    def player_icon(self, location_input, id):
-
+    def move_player_icon(self, location_input, id):
+        
         if location_input is None:
             ("Location not found")
             return
             
-        print("icon created")
-        if id is not :
-            return
-        # self.map_canvas.delete(id)
+        
         x, y = location_input
         size = 20
-        
-        self.map_canvas.create_rectangle(
-        x , y , x + size , y + size,
-        fill='green',
-        outline='black',
-        width=2, tags=id)
-        self.map_canvas.tag_raise(id)
-        self.map_canvas.tag_lower("map_image")
-        print(f"icon created, {location_input}")
+        self.map_canvas.move(self.player_icon[id - 1], x - self.map_canvas.coords(self.player_icon[id - 1])[0], y - self.map_canvas.coords(self.player_icon[id - 1])[1])
+        # self.map_canvas.create_rectangle(
+        # x , y , x + size , y + size,
+        # fill='green',
+        # outline='black',
+        # width=2, tags=f"{id}")
+        # self.map_canvas.tag_raise(f"{id}")
+        # self.map_canvas.tag_lower("map_image")
+        # print(f"icon created, {location_input}")
 
 
         
