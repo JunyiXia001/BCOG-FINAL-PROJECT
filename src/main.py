@@ -17,7 +17,9 @@ color_num = {
     "Dark Blue": 2,
     "Utility": 2
 }
-
+player_color = {
+    1:"green", 2:"red", 3:"yellow", 4:"blue"
+}
 ##Junyi Xia 
 ### MainFrame and Map display 
 class Display:   
@@ -35,7 +37,7 @@ class Display:
             size = 20
             rec = self.map_canvas.create_rectangle(
             x , y , x + size , y + size,
-            fill='green',
+            fill=player_color[player.id],
             outline='black',
             width=2, tag = player.id)
             self.player_icon.append(rec)
@@ -78,6 +80,8 @@ class Display:
         self.take_turn_button.pack(side = "right",padx=10, pady=10)
         self.buy_button = tk.Button(self.interface_frame, text="Buy", command=self.call_buy_land, bg="yellow") 
         self.buy_button.pack(side = "left",padx=10, pady=10)
+        self.upgrade_button = tk.Button(self.interface_frame, text = "build house", command=self.call_upgrade, bg = "yellow")
+        self.upgrade_button.pack(side = "left",padx=10, pady=10)
         self.sell_button = tk.Button(self.interface_frame, text="Sell", command=self.call_sell_land, bg="red") 
         self.sell_button.pack(side = "right",padx=10,pady=10)
         self.End_button = tk.Button(self.interface_frame, text="End", command=self.call_end, bg="yellow") 
@@ -144,6 +148,9 @@ class Display:
                 curr_land.owner = 0
                 self.current_player.money += int(curr_land.price*0.7)
                 self.current_player.lands.remove(curr_land)
+                for land in self.current_player.lands:
+                    if land.color == self.curr_land.color and land.level == 1:
+                        land.level = 0
             self.money_label.config(text=f"Your Money: ${self.current_player.money}")
 
         images_info = []
@@ -180,8 +187,59 @@ class Display:
             select_button.grid(row=3, column=i, pady=10)
 
         sell_interface.mainloop()
-    # setup for message box 
-    ## Source from stackoverflow Date: 4/3/2025 Link: https://stackoverflow.com/questions/3842155/is-there-a-way-to-make-the-tkinter-text-widget-read-only?
+   
+    def call_upgrade(self):
+        upgrade_interface = tk.Toplevel()
+        upgrade_interface.title("Choose an Image")
+        upgrade_interface.geometry("800x600")
+        upgradable = []
+
+        def upgrade_selected(i):
+            curr_land = upgradable[i]
+            if self.current_player.money < curr_land.house_price:
+                self.message("not enough money to build a house")
+            else:
+                curr_land.level += 1
+                self.current_player.money -= curr_land.house_price
+                if curr_land.level < 1 or land.level > 6:
+                    upgradable.remove(curr_land)
+            self.money_label.config(text=f"Your Money: ${self.current_player.money}")
+
+        for land in self.current_player.lands:
+            if land.level >=1 and land.level <= 5:
+                upgradable.append(land)
+        images_info = []
+        for land in upgradable:
+            images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\ncurrent Level: {land.level}\nbuild a house cause{land.house_price}"})
+        
+        top_frame = tk.Frame(upgrade_interface)
+        top_frame.pack(pady=10)
+
+        # Show current player's money
+        self.money_label = tk.Label(top_frame, text=f"Your Money: ${self.current_player.money}")
+        self.money_label.pack()
+        
+        frame = tk.Frame(upgrade_interface)
+        frame.pack(pady=20)
+
+        self.photo_images = [] 
+        for i, info in enumerate(images_info):
+            img = Image.open(info['path'])
+            img = img.resize((200, 200)) 
+            photo = ImageTk.PhotoImage(img)
+            self.photo_images.append(photo)  
+
+            img_label = tk.Label(frame, image=photo)
+            img_label.grid(row=0, column=i, padx=10)
+
+            desc_label = tk.Label(frame, text=info['description'], wraplength=180)
+            desc_label.grid(row=2, column=i)
+
+            select_button = tk.Button(frame, text="Select", command=lambda x=i: upgrade_selected(x))
+            select_button.grid(row=3, column=i, pady=10)
+        
+        upgrade_interface.mainloop()
+
 
     def call_end(self):
         self.End_button.pack_forget()
@@ -189,6 +247,10 @@ class Display:
         self.current_player = self.player_list[0]
         self.take_turn_button.pack(side = "right",padx=10, pady=10)
 
+
+
+    # setup for message box 
+    # Source from stackoverflow Date: 4/3/2025 Link: https://stackoverflow.com/questions/3842155/is-there-a-way-to-make-the-tkinter-text-widget-read-only?
     def message(self, message):
         self.info_frame.config(state="normal")
         self.info_frame.insert("end", message + "\n")
