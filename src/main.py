@@ -135,12 +135,31 @@ class Display:
         sell_interface.title("Choose an Image")
         sell_interface.geometry("800x600")
 
+        def sell_selected(i):
+            curr_land = self.current_player.lands[i]
+            if curr_land.level > 1:
+                curr_land.level -= 1
+                self.current_player.money += curr_land.house_price/2
+            else:
+                curr_land.owner = 0
+                self.current_player.money += int(curr_land.price*0.7)
+                self.current_player.lands.remove(curr_land)
+            self.money_label.config(text=f"Your Money: ${self.current_player.money}")
+
         images_info = []
         for land in self.current_player.lands:
             if land.level >= 2:
                 images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling house, price is {land.house_price/2}"})
             else:
                 images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling lands, price is {int(land.price*0.7)}"})
+        
+        top_frame = tk.Frame(sell_interface)
+        top_frame.pack(pady=10)
+
+        # Show current player's money
+        self.money_label = tk.Label(top_frame, text=f"Your Money: ${self.current_player.money}")
+        self.money_label.pack()
+        
         frame = tk.Frame(sell_interface)
         frame.pack(pady=20)
 
@@ -157,7 +176,7 @@ class Display:
             desc_label = tk.Label(frame, text=info['description'], wraplength=180)
             desc_label.grid(row=2, column=i)
 
-            select_button = tk.Button(frame, text="Select", command=lambda i=i: select_image(i))
+            select_button = tk.Button(frame, text="Select", command=lambda x=i: sell_selected(x))
             select_button.grid(row=3, column=i, pady=10)
 
         sell_interface.mainloop()
