@@ -115,12 +115,12 @@ class Display:
         scroll_bar.config(command=self.info_frame.yview)
         self.message("Welcome to Monopoly Game")
         self.message(f"Current player is {self.player_num}. Each player has $1500.")
-        self.message("Click Go! to start the game! Good Luck!\n")
+        self.message("Click Go! to start the game! Good Luck!\n\n")
     # connect button with take turn method 
 
     def call_take_turn(self):
         self.message(f"It's {self.current_player.name}'s turn.")
-        self.message(f"money: {self.current_player.money}")
+        self.message(f"money: {self.current_player.money}\n")
         self.take_turn()
         # self.buy_button.pack_forget()
         self.take_turn_button.pack_forget()
@@ -131,13 +131,52 @@ class Display:
 
     def call_buy_land(self):
         self.buy_Land()
-        self.message(f"this land is now {self.game_map[self.current_player.position].owner}\n")
+        self.message(f"this land is now {self.game_map[self.current_player.position].owner}\n\n")
         self.buy_button.pack_forget()
 
     def call_sell_land(self):
         sell_interface = tk.Toplevel()
         sell_interface.title("Choose an Image")
         sell_interface.geometry("800x600")
+        top_frame = tk.Frame(sell_interface)
+        top_frame.pack(pady=10)
+        
+        frame = tk.Frame(sell_interface)
+        frame.pack(pady=20)
+
+        def sell_update_canvas():
+            for i in top_frame.winfo_children():
+                i.destroy()
+            for i in frame.winfo_children():
+                i.destroy()
+            self.money_label = tk.Label(top_frame, text=f"Your Money: ${self.current_player.money}")
+            self.money_label.pack()  
+            images_info = []
+            for land in self.current_player.lands:
+                if land.level >= 2:
+                    images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling house, price is {land.house_price/2}"})
+                else:
+                    images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling lands, price is {int(land.price*0.7)}"})
+            
+            
+
+            self.photo_images = [] 
+            for i, info in enumerate(images_info):
+                img = Image.open(info['path'])
+                img = img.resize((200, 200)) 
+                photo = ImageTk.PhotoImage(img)
+                self.photo_images.append(photo)  
+
+                img_label = tk.Label(frame, image=photo)
+                img_label.grid(row=0, column=i, padx=10)
+
+                desc_label = tk.Label(frame, text=info['description'], wraplength=180)
+                desc_label.grid(row=2, column=i)
+
+                select_button = tk.Button(frame, text="Select", command=lambda x=i: sell_selected(x))
+                select_button.grid(row=3, column=i, pady=10)
+        
+        sell_update_canvas()
 
         def sell_selected(i):
             curr_land = self.current_player.lands[i]
@@ -149,50 +188,17 @@ class Display:
                 self.current_player.money += int(curr_land.price*0.7)
                 self.current_player.lands.remove(curr_land)
                 for land in self.current_player.lands:
-                    if land.color == self.curr_land.color and land.level == 1:
+                    if land.color == curr_land.color and land.level == 1:
                         land.level = 0
-            self.money_label.config(text=f"Your Money: ${self.current_player.money}")
-
-        images_info = []
-        for land in self.current_player.lands:
-            if land.level >= 2:
-                images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling house, price is {land.house_price/2}"})
-            else:
-                images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling lands, price is {int(land.price*0.7)}"})
-        
-        top_frame = tk.Frame(sell_interface)
-        top_frame.pack(pady=10)
-
-        # Show current player's money
-        self.money_label = tk.Label(top_frame, text=f"Your Money: ${self.current_player.money}")
-        self.money_label.pack()
-        
-        frame = tk.Frame(sell_interface)
-        frame.pack(pady=20)
-
-        self.photo_images = [] 
-        for i, info in enumerate(images_info):
-            img = Image.open(info['path'])
-            img = img.resize((200, 200)) 
-            photo = ImageTk.PhotoImage(img)
-            self.photo_images.append(photo)  
-
-            img_label = tk.Label(frame, image=photo)
-            img_label.grid(row=0, column=i, padx=10)
-
-            desc_label = tk.Label(frame, text=info['description'], wraplength=180)
-            desc_label.grid(row=2, column=i)
-
-            select_button = tk.Button(frame, text="Select", command=lambda x=i: sell_selected(x))
-            select_button.grid(row=3, column=i, pady=10)
-
+            sell_update_canvas()
+            
         sell_interface.mainloop()
    
     def call_upgrade(self):
         upgrade_interface = tk.Toplevel()
         upgrade_interface.title("Choose an Image")
         upgrade_interface.geometry("800x600")
-        upgradable = []
+        
 
         def upgrade_selected(i):
             curr_land = upgradable[i]
@@ -204,7 +210,9 @@ class Display:
                 if curr_land.level < 1 or land.level > 6:
                     upgradable.remove(curr_land)
             self.money_label.config(text=f"Your Money: ${self.current_player.money}")
+            upgrade_interface.destroy()
 
+        upgradable = []
         for land in self.current_player.lands:
             if land.level >=1 and land.level <= 5:
                 upgradable.append(land)
@@ -246,6 +254,7 @@ class Display:
         self.player_list.append(self.player_list.pop(0)) 
         self.current_player = self.player_list[0]
         self.take_turn_button.pack(side = "right",padx=10, pady=10)
+
 
 
 
@@ -309,7 +318,7 @@ class Display:
                     # if buy:
                     #     self.buyLand()
                 elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
-                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rent_Num())
+                    self.paid(self.current_player.id, self.game_map[self.current_player.position].owner, self.game_map[self.current_player.position].rent_Num())
         #Railroad
         elif self.game_map[self.current_player.position].land_type == "Railroad":
             if self.game_map[self.current_player.position].pledge == False:
@@ -320,7 +329,7 @@ class Display:
                     # if buy:
                     #     self.buyLand()
                 elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
-                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rent_Num())
+                    self.paid(self.current_player.id, self.game_map[self.current_player.position].owner, self.game_map[self.current_player.position].rent_Num())
         #Utility
         elif self.game_map[self.current_player.position].land_type == "Utility":
             if self.game_map[self.current_player.position].pledge == False:
@@ -331,7 +340,7 @@ class Display:
                     # if buy:
                     #     self.buyLand()
                 elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
-                    self.paid(self.current_player.id - 1, self.game_map[self.current_player.position].owner - 1, self.game_map[self.current_player.position].rent_Num(die1 + die2))
+                    self.paid(self.current_player.id, self.game_map[self.current_player.position].owner, self.game_map[self.current_player.position].rent_Num(die1 + die2))
         #Jail
         elif self.game_map[self.current_player.position].land_type == "Jail":
             self.current_player.position = 10
@@ -374,17 +383,17 @@ class Display:
                         i.level = self.current_player.color_count["Utility"] - 1
 
     def paid(self, player, receiver, num):
-        self.message(f"{self.player_list[player].name} pay {self.player_list[receiver].name} money by {num}")
-        if self.player_list[player].money >= num:
-            self.player_list[player].money -= num
-            self.player_list[receiver].money += num
+        self.message(f"{self.player_list[player-1].name} pay {self.player_list[receiver-1].name} money by {num}")
+        if self.player_list[player-1].money >= num:
+            self.player_list[player-1].money -= num
+            self.player_list[receiver-1].money += num
             return False
-        if self.player_list[player].land_sum >= num:
-            while self.player_list[player].lands:
+        if self.player_list[player-1].land_sum >= num:
+            while self.player_list[player-1].lands:
                 sell_Land(player)
-                if self.player_list[player].money >= tmp_money:
-                    self.player_list[player].money -= num
-                    self.player_list[receiver].money += num
+                if self.player_list[player-1].money >= tmp_money:
+                    self.player_list[player-1].money -= num
+                    self.player_list[receiver-1].money += num
                     return False
         return True
 
