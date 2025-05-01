@@ -143,7 +143,6 @@ class Display:
         
         frame = tk.Frame(sell_interface)
         frame.pack(pady=20)
-
         def sell_update_canvas():
             for i in top_frame.winfo_children():
                 i.destroy()
@@ -157,8 +156,6 @@ class Display:
                     images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling house, price is {land.house_price/2}"})
                 else:
                     images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling lands, price is {int(land.price*0.7)}"})
-            
-            
 
             self.photo_images = [] 
             for i, info in enumerate(images_info):
@@ -251,10 +248,9 @@ class Display:
 
     def call_end(self):
         self.End_button.pack_forget()
-        self.player_list.append(self.player_list.pop(0)) 
-        self.current_player = self.player_list[0]
+        index = self.current_player.id - 1
+        self.current_player = self.player_list[(index + 1)%len(self.player_list)]
         self.take_turn_button.pack(side = "right",padx=10, pady=10)
-
 
 
 
@@ -267,6 +263,7 @@ class Display:
         self.info_frame.config(state="disabled")
 
     def take_turn(self):
+
         #Check player's jail status
         
         # if player.jail_status > 0:
@@ -284,7 +281,6 @@ class Display:
         #             player.jail_status = 0
         #     elif choice == 3:
         #         return
-            
         die1 = roll_die()
         die2 = roll_die()
         one_more = False
@@ -300,6 +296,7 @@ class Display:
         land = self.game_map[self.current_player.position]
         self.message(f"{self.current_player.name} go to {land.name}.\n")
         self.move_player_icon(land.location, self.current_player.id)
+        
         # self.current_player.position = (self.current_player.position + die1 + die2) % 40
 
         # move to jail if continue move for 3 times
@@ -383,6 +380,7 @@ class Display:
                         i.level = self.current_player.color_count["Utility"] - 1
 
     def paid(self, player, receiver, num):
+        self.message(f"{player} pay {receiver} money by {num}")
         self.message(f"{self.player_list[player-1].name} pay {self.player_list[receiver-1].name} money by {num}")
         if self.player_list[player-1].money >= num:
             self.player_list[player-1].money -= num

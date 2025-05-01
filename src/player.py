@@ -11,14 +11,14 @@ class Player:
         "Green": 0,
         "Dark Blue": 0,
     }
-    money = 1500
-    lands = []
-    cards = []
-    position = 0
-    jail_status = 0
     def __init__(self, id):
         self.id = id
         self.name = f"Player {id}"
+        self.money = 1500
+        self.lands = []
+        self.cards = []
+        self.position = 0
+        self.jail_status = 0
     def land_sum(self):
         return sum(land.mortage + (land.level*land.house_price)/2 for land in lands)
     
