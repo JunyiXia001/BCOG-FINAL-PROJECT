@@ -153,9 +153,9 @@ class Display:
             images_info = []
             for land in self.current_player.lands:
                 if land.level >= 2:
-                    images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling house, price is {land.house_price/2}"})
+                    images_info.append({"path": "image/house.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling house, price is {land.house_price/2}"})
                 else:
-                    images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling lands, price is {int(land.price*0.7)}"})
+                    images_info.append({"path": "image/house.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling lands, price is {int(land.price*0.7)}"})
 
             self.photo_images = [] 
             for i, info in enumerate(images_info):
@@ -222,7 +222,7 @@ class Display:
                         
         images_info = []
         for land in upgradable:
-            images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\ncurrent Level: {land.level}\nbuild a house cause{land.house_price}"})
+            images_info.append({"path": "image/house.png", "description": f"Name: {land.name}\ncurrent Level: {land.level}\nbuild a house cause{land.house_price}"})
         
         top_frame = tk.Frame(upgrade_interface)
         top_frame.pack(pady=10)
