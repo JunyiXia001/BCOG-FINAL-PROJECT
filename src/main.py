@@ -211,8 +211,15 @@ class Display:
 
         upgradable = []
         for land in self.current_player.lands:
-            if land.level >=1 and land.level <= 5:
-                upgradable.append(land)
+            if land.land_type == "property" and land.level >=1 and land.level <= 5:
+                add = True
+                for land2 in self.current_player.lands:
+                    if land2.color == land.color and land2.level < land.level:
+                        add = False
+                        break
+                if add:
+                    upgradable.append(land)
+                        
         images_info = []
         for land in upgradable:
             images_info.append({"path": "image/monopoly.png", "description": f"Name: {land.name}\ncurrent Level: {land.level}\nbuild a house cause{land.house_price}"})
@@ -315,29 +322,27 @@ class Display:
                     # if buy:
                     #     self.buyLand()
                 elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
-                    self.paid(self.current_player.id, self.game_map[self.current_player.position].owner, self.game_map[self.current_player.position].rent_Num())
+                    num = self.game_map[self.current_player.position].rent_Num()
+
+                    self.paid(self.current_player.id, self.game_map[self.current_player.position].owner, num)
         #Railroad
         elif self.game_map[self.current_player.position].land_type == "Railroad":
             if self.game_map[self.current_player.position].pledge == False:
                 if self.game_map[self.current_player.position].owner == 0:
                     self.message("do you want to buy the land?\n")
                     self.buy_button.pack(side = "right",padx=10, pady=10)
-                    # buy = bool(input("0: no, 1: yes"))
-                    # if buy:
-                    #     self.buyLand()
                 elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
-                    self.paid(self.current_player.id, self.game_map[self.current_player.position].owner, self.game_map[self.current_player.position].rent_Num())
+                    num = self.game_map[self.current_player.position].rent_Num()
+                    self.paid(self.current_player.id, self.game_map[self.current_player.position].owner, num)
         #Utility
         elif self.game_map[self.current_player.position].land_type == "Utility":
             if self.game_map[self.current_player.position].pledge == False:
                 if self.game_map[self.current_player.position].owner == 0:
                     self.message("do you want to buy the land?\n")
                     self.buy_button.pack(side = "right",padx=10, pady=10)
-                    # buy = bool(input("0: no, 1: yes"))
-                    # if buy:
-                    #     self.buyLand()
                 elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
-                    self.paid(self.current_player.id, self.game_map[self.current_player.position].owner, self.game_map[self.current_player.position].rent_Num(die1 + die2))
+                    num = self.game_map[self.current_player.position].rent_Num(die1 + die2)
+                    self.paid(self.current_player.id, self.game_map[self.current_player.position].owner, num)
         #Jail
         elif self.game_map[self.current_player.position].land_type == "Jail":
             self.current_player.position = 10
@@ -490,21 +495,6 @@ def load_location():
     for i in range(len(loc_info)):
         location.append(loc_info[str(i)])
     return location
-    
-# sell land 
-def sell_Land(player):
-    sell_id = int(input("which to sell\n"))
-    while lands[sell_id].level > 0:
-        degrade = bool(input("sell the house?"))
-        if degrade:
-            lands[sell_id].level -= 1
-            player.money += lands[sell_id].house_price/2
-        else:
-            return
-    sells = bool(input("sell the land?"))
-    if sells:
-        player.lands[sell_id].pledge = True
-        player.money += int(lands[sell_id].price*0.7)
 
 
 ## chance situation
