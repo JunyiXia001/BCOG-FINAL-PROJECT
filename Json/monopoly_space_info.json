@@ -1,6 +1,6 @@
 [
     {"Name": "Go", "Type": "Go", "Action": "Collect $200", "Price": 0, "Color": "", "HousePrice": 0, "Rent": []},
-    {"Name": "Mediterranean Avenue", "Type": "Property", "Price": 60, "Color": "Purple", "HousePrice": 50, "Rent": [2, 4, 10, 30, 90, 160, 250]},
+    {"Name": "Mediterranean Avenue", "Type": "Property", "Price": 60, "Color": "Purple", "HousePrice": 50, "Rent": [2000, 4, 10, 30, 90, 160, 250]},
     {"Name": "Community Chest", "Type": "Card", "Price": 0, "Action": "Draw Community Chest", "Color": "", "HousePrice": 0, "Rent": []},
     {"Name": "Baltic Avenue", "Type": "Property", "Price": 60, "Color": "Purple", "HousePrice": 50, "Rent": [4, 8, 20, 60, 180, 320, 450]},
     {"Name": "Income Tax", "Type": "Income Tax", "Action": "Pay $200", "Price": 0, "Color": "", "HousePrice": 0, "Rent": []},

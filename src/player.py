@@ -20,7 +20,7 @@ class Player:
         self.position = 0
         self.jail_status = 0
     def land_sum(self):
-        return sum(land.mortage + (land.level*land.house_price)/2 for land in lands)
+        return sum(land.mortage + (land.level*land.house_price)/2 for land in self.lands)
     
     def __str__(self):
         return self.name

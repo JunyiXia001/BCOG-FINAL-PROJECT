@@ -30,9 +30,9 @@ class Display:
         self.player_num = 2
         self.init_window()
         self.game_map = load_Map()
-        self.player_list = [Player(i + 1) for i in range(self.player_num)] 
+        self.player_list = {i + 1 : Player(i + 1) for i in range(self.player_num)} 
         self.player_icon = []
-        for player in self.player_list:
+        for player in self.player_list.values():
             x, y = self.game_map[0].location
             size = 20
             rec = self.map_canvas.create_rectangle(
@@ -41,18 +41,8 @@ class Display:
             outline='black',
             width=2, tag = player.id)
             self.player_icon.append(rec)
-        # for i in self.player_list:
-        #     x, y = self.game_map[0].location
-        #     size = 20
-        #     self.map_canvas.create_rectangle(
-        #     x , y , x + size , y + size,
-        #     fill='green',
-        #     outline='black',
-        #     width=2, tags=i.id)
-        #     self.map_canvas.tag_raise(i.id)
-        #     self.map_canvas.tag_lower("map_image")
     
-        self.current_player = self.player_list[0]
+        self.current_player = self.player_list[1]
         self.land = None
 
     def init_window(self):
@@ -125,8 +115,6 @@ class Display:
         # self.buy_button.pack_forget()
         self.take_turn_button.pack_forget()
         self.End_button.pack(side = "right",padx=10,pady=10)
-        # self.player_list.append(self.player_list.pop(0)) 
-        # self.current_player = self.player_list[0]
     # connect button with buy land method 
 
     def call_buy_land(self):
@@ -211,7 +199,7 @@ class Display:
 
         upgradable = []
         for land in self.current_player.lands:
-            if land.land_type == "property" and land.level >=1 and land.level <= 5:
+            if land.land_type == "Property" and land.level >=1 and land.level <= 5:
                 add = True
                 for land2 in self.current_player.lands:
                     if land2.color == land.color and land2.level < land.level:
@@ -255,9 +243,14 @@ class Display:
 
     def call_end(self):
         self.End_button.pack_forget()
-        index = self.current_player.id - 1
-        self.current_player = self.player_list[(index + 1)%len(self.player_list)]
-        self.take_turn_button.pack(side = "right",padx=10, pady=10)
+        if len(self.player_list) == 1:
+            self.message(f"{next(iter(self.player_list.values())).name} is the winner")
+        else:
+            index = (self.current_player.id) % len(self.player_list)
+            while index + 1 not in self.player_list:
+                index = (index + 1) % len(self.player_list)
+            self.current_player = self.player_list[index + 1]
+            self.take_turn_button.pack(side = "right",padx=10, pady=10)
 
 
 
@@ -385,20 +378,25 @@ class Display:
                         i.level = self.current_player.color_count["Utility"] - 1
 
     def paid(self, player, receiver, num):
-        self.message(f"{player} pay {receiver} money by {num}")
-        self.message(f"{self.player_list[player-1].name} pay {self.player_list[receiver-1].name} money by {num}")
-        if self.player_list[player-1].money >= num:
-            self.player_list[player-1].money -= num
-            self.player_list[receiver-1].money += num
-            return False
-        if self.player_list[player-1].land_sum >= num:
-            while self.player_list[player-1].lands:
-                sell_Land(player)
-                if self.player_list[player-1].money >= tmp_money:
-                    self.player_list[player-1].money -= num
-                    self.player_list[receiver-1].money += num
-                    return False
-        return True
+        self.message(f"{self.player_list[player].name} pay {self.player_list[receiver].name} money by {num}")
+        if self.player_list[player].money >= num:
+            self.player_list[player].money -= num
+            self.player_list[receiver].money += num
+        if self.player_list[player].land_sum() >= num:
+            self.message(f"you have to sell properties to pay")
+            while self.player_list[player].lands:
+                self.call_sell_land()
+                if self.player_list[player].money >= num:
+                    self.player_list[player].money -= num
+                    self.player_list[receiver].money += num
+                    break
+        elif self.player_list[player].land_sum() < num:
+            self.message(f"{self.player_list[player].name} is out")
+            self.player_list[receiver].money += self.player_list[player].land_sum()
+            for land in self.player_list[player].lands:
+                land.owner = 0
+                land.level = 0
+            del self.player_list[player]
 
     def paid_bank(self, num):
         if self.current_player.money >= num:
