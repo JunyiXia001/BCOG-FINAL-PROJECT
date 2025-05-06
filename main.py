@@ -130,12 +130,27 @@ class Display:
         top_frame = tk.Frame(sell_interface)
         top_frame.pack(pady=10)
         
-        frame = tk.Frame(sell_interface)
-        frame.pack(pady=20)
+        canvas_frame = tk.Frame(sell_interface)
+        canvas_frame.pack(fill="both", expand=True)
+
+        canvas = tk.Canvas(canvas_frame)
+        scrollbar = tk.Scrollbar(canvas_frame, orient="horizontal", command=canvas.xview)
+        canvas.configure(xscrollcommand=scrollbar.set)
+
+        scrollbar.pack(side="bottom", fill="x")
+        canvas.pack(side="left", fill="both", expand=True)
+
+        scrollable_frame = tk.Frame(canvas)
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+
+        def on_configure(event):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+        scrollable_frame.bind("<Configure>", on_configure)
+
         def sell_update_canvas():
             for i in top_frame.winfo_children():
                 i.destroy()
-            for i in frame.winfo_children():
+            for i in scrollable_frame.winfo_children():
                 i.destroy()
             self.money_label = tk.Label(top_frame, text=f"Your Money: ${self.current_player.money}")
             self.money_label.pack()  
@@ -153,16 +168,14 @@ class Display:
                 photo = ImageTk.PhotoImage(img)
                 self.photo_images.append(photo)  
 
-                img_label = tk.Label(frame, image=photo)
+                img_label = tk.Label(scrollable_frame, image=photo)
                 img_label.grid(row=0, column=i, padx=10)
 
-                desc_label = tk.Label(frame, text=info['description'], wraplength=180)
+                desc_label = tk.Label(scrollable_frame, text=info['description'], wraplength=180)
                 desc_label.grid(row=2, column=i)
 
-                select_button = tk.Button(frame, text="Select", command=lambda x=i: sell_selected(x))
+                select_button = tk.Button(scrollable_frame, text="Select", command=lambda x=i: sell_selected(x))
                 select_button.grid(row=3, column=i, pady=10)
-        
-        sell_update_canvas()
 
         def sell_selected(i):
             curr_land = self.current_player.lands[i]
@@ -177,6 +190,7 @@ class Display:
                     if land.color == curr_land.color and land.level == 1:
                         land.level = 0
             sell_update_canvas()
+        sell_update_canvas()
             
         sell_interface.mainloop()
    
@@ -216,12 +230,23 @@ class Display:
         top_frame = tk.Frame(upgrade_interface)
         top_frame.pack(pady=10)
 
-        # Show current player's money
         self.money_label = tk.Label(top_frame, text=f"Your Money: ${self.current_player.money}")
         self.money_label.pack()
         
-        frame = tk.Frame(upgrade_interface)
-        frame.pack(pady=20)
+        canvas_frame = tk.Frame(upgrade_interface)
+        canvas_frame.pack(fill="both", expand=True)
+        canvas = tk.Canvas(canvas_frame)
+        scrollbar = tk.Scrollbar(canvas_frame, orient="horizontal", command=canvas.xview)
+        canvas.configure(xscrollcommand=scrollbar.set)
+
+        scrollbar.pack(side="bottom", fill="x")
+        canvas.pack(side="left", fill="both", expand=True)
+
+        scrollable_frame = tk.Frame(canvas)
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        def on_configure(event):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+        scrollable_frame.bind("<Configure>", on_configure)
 
         self.photo_images = [] 
         for i, info in enumerate(images_info):
@@ -229,14 +254,11 @@ class Display:
             img = img.resize((200, 200)) 
             photo = ImageTk.PhotoImage(img)
             self.photo_images.append(photo)  
-
-            img_label = tk.Label(frame, image=photo)
+            img_label = tk.Label(scrollable_frame, image=photo)
             img_label.grid(row=0, column=i, padx=10)
-
-            desc_label = tk.Label(frame, text=info['description'], wraplength=180)
+            desc_label = tk.Label(scrollable_frame, text=info['description'], wraplength=180)
             desc_label.grid(row=2, column=i)
-
-            select_button = tk.Button(frame, text="Select", command=lambda x=i: upgrade_selected(x))
+            select_button = tk.Button(scrollable_frame, text="Select", command=lambda x=i: upgrade_selected(x))
             select_button.grid(row=3, column=i, pady=10)
         
         upgrade_interface.mainloop()
@@ -245,7 +267,13 @@ class Display:
     def call_end(self):
         self.End_button.pack_forget()
         if len(self.player_list) == 1:
-            self.message(f"{next(iter(self.player_list.values())).name} is the winner")
+            winner = next(iter(self.player_list.values()))
+            winner_popup = tk.Toplevel()
+            winner_popup.title("Game Over")
+            winner_popup.geometry("300x150")
+            tk.Label(winner_popup, text=f"{winner.name} is the winner!", font=("Helvetica", 14, "bold")).pack(pady=30)
+            tk.Button(winner_popup, text="OK", command=winner_popup.destroy).pack(pady=10)
+
         else:
             index = (self.current_player.id) % len(self.player_list)
             while index + 1 not in self.player_list:
@@ -310,7 +338,7 @@ class Display:
             self.message("pass go, get 200\n")
             self.current_player.money += 200
         #for debug fix moving range
-        self.current_player.position = (self.current_player.position + 10) % 40
+        self.current_player.position = (self.current_player.position + 1) % 40
         land = self.game_map[self.current_player.position]
         self.message(f"{self.current_player.name} go to {land.name}.\n")
         self.move_player_icon(land.location, self.current_player.id)
@@ -396,7 +424,7 @@ class Display:
         if self.player_list[player].money >= num:
             self.player_list[player].money -= num
             self.player_list[receiver].money += num
-        if self.player_list[player].land_sum() >= num:
+        elif self.player_list[player].land_sum() >= num:
             self.message(f"you have to sell properties to pay")
             while self.player_list[player].lands:
                 self.call_sell_land()
