@@ -5,6 +5,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import json
 from tkinter import ttk
+from tkinter import messagebox
 color_num = {
     "Railroad": 4,
     "Purple": 2,
@@ -264,23 +265,40 @@ class Display:
 
     def take_turn(self):
 
-        #Check player's jail status
+        # Check player's jail status
         
-        # if player.jail_status > 0:
-        #     player.jail_status -= 1
-        #     choice = int(input("paid, roll, wait"))
-        #     if choice == 0:
-        #         player.jail_status = 0
-        #         player.money -= 50
-        #     elif choice == 1:
-        #         die1 = roll_die()
-        #         die2 = roll_die()
-        #         if die1 != die2:
-        #             return
-        #         else:
-        #             player.jail_status = 0
-        #     elif choice == 3:
-        #         return
+        if self.current_player.jail_status > 0:
+            self.current_player.jail_status -= 1
+            jail_popup = tk.Toplevel()
+            jail_popup.title("You're in Jail")
+            jail_popup.geometry("300x150")
+            self.current_player.jail_status -= 1
+
+            def pay():
+                self.current_player.jail_status = 0
+                self.current_player.money -= 50
+                messagebox.showinfo("Info", "You paid $50 to get out of jail.")
+                jail_popup.destroy()
+
+            def roll():
+                die1 = roll_die()
+                die2 = roll_die()
+                if die1 != die2:
+                    messagebox.showinfo("Roll Result", f"You rolled {die1} and {die2} (not a double). You stay in jail.")
+                    jail_popup.destroy()
+                    self.call_end()
+                    return
+                else:
+                    self.current_player.jail_status = 0
+                    messagebox.showinfo("Roll Result", f"You rolled a double: {die1} and {die2}. You're free!")
+                    jail_popup.destroy()
+                    return
+            tk.Label(jail_popup, text="Choose your action:").pack(pady=10)
+            tk.Button(jail_popup, text="Pay $50", command=pay).pack(pady=5)
+            tk.Button(jail_popup, text="Roll for double", command=roll).pack(pady=5)
+            tk.Button(jail_popup, text="Wait", command=wait).pack(pady=5)
+            return
+        
         die1 = roll_die()
         die2 = roll_die()
         one_more = False
@@ -292,17 +310,12 @@ class Display:
             self.message("pass go, get 200\n")
             self.current_player.money += 200
         #for debug fix moving range
-        self.current_player.position = (self.current_player.position + 1) % 40
+        self.current_player.position = (self.current_player.position + 10) % 40
         land = self.game_map[self.current_player.position]
         self.message(f"{self.current_player.name} go to {land.name}.\n")
         self.move_player_icon(land.location, self.current_player.id)
         
         # self.current_player.position = (self.current_player.position + die1 + die2) % 40
-
-        # move to jail if continue move for 3 times
-        # if count == 3:
-        #     self.current_player.position = 10
-        #     self.current_player.jail_status = 2
 
         #Check the space that players move to
         #Property
@@ -339,6 +352,7 @@ class Display:
         #Jail
         elif self.game_map[self.current_player.position].land_type == "Jail":
             self.current_player.position = 10
+            self.move_player_icon(self.game_map[10].location, self.current_player.id)
             self.current_player.jail_status = 2
         #Income tax
         elif self.game_map[self.current_player.position].land_type == "Income Tax":
