@@ -1,5 +1,5 @@
-from land import Land
-from player import Player
+from src.land import Land
+from src.player import Player
 import random
 import tkinter as tk
 from PIL import Image, ImageTk
