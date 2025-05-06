@@ -7,11 +7,16 @@ import unittest
 from main import Display
 
 print("one")
-
+task_number = 0
 class test_main(unittest.TestCase):
     def test_display(self):
         print("test_display running")
-        pass
+        try:
+            d = Display()
+            print("test passed, display initialized")
+            task_number + 1
+        except Exception as e:
+            self.fail("Dsiplay not initialized")
 
     def test_moving(self):
         print("test_moving running")
@@ -32,7 +37,12 @@ class test_main(unittest.TestCase):
     def test_take_turn(self):
         print("test_take_turn running")
         pass
+    
 
+    def test_button(self):
+        print("test_button running")
+        pass
+    
     def test_end_game(self):
         print("test_end_game running")
         pass
