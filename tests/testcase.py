@@ -7,15 +7,14 @@ import unittest
 from main import Display
 from unittest.mock import patch, mock_open
 import json
-
-task_number = 0
+from unittest.mock import MagicMock
 class test_main(unittest.TestCase):
+
     def test_display(self):
         print("test_display running")
         try:
             d = Display()
             print("test passed, display initialized")
-            task_number + 1
         except Exception as e:
             self.fail("Dsiplay not initialized")
 
@@ -33,29 +32,41 @@ class test_main(unittest.TestCase):
         with open("Json\monopoly_space_info.json") as f:
             data = json.load(f)
         try:
-            mock_file.assert_called_with("Json\monopoly_space_info.json")
+            mock_file.assert_called_with(r"Json\monopoly_space_info.json")
             assert data["Name"] == "Mediterranean Avenue"
             assert data["Price"] == 60
             print("Load file test passed")
         except Exception as e:
             self.fail("Load file test failed")
-      
-
-    def test_moving(self):
-        print("test_moving running")
-        pass
-
 
     def test_money(self):
         print("test_money running")
-        pass  
+
+        player = Player(1)
+        try:
+
+            self.assertEqual(player.money, 1500)
+
+            player.money -= 300
+            self.assertEqual(player.money, 1200)
+
+            player.money += 450
+            self.assertEqual(player.money, 1650)
+            print("test money passed")
+        except Exception as e:
+            self.fail("test_money failed")
 
     def test_jail(self):
-        pass
-    
-    def test_end_game(self):
-        print("test_end_game running")
-        pass
+        print("test_jail running")
+        player = Player(1)
+        try:
+            self.assertEqual(player.jail_status, 0)
+            player.jail_status = 1
+            self.assertEqual(player.jail_status, 1)
+            print("test_jail passed")
+
+        except Exception as e:
+            self.fail("test_jail failed")
 
 if __name__ == "__main__":
     unittest.main()
