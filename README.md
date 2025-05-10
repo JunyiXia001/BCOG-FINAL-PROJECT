@@ -50,7 +50,10 @@ Display class\
 •paid(player, receiver, num): return boolean variable, and transefer money between players(rent).\
 •sellLand(player): allowing players to sell their assets.\
 •laodMap(): Load information of each space in the map, return the value as list.\
-•take_chance(): choose events randomly and return it as a string.
+•take_chance(): choose events randomly and return it as a string.\
+•call_upgrade(): allowing players to upgrade their house.\
+•message(): using a message box to pass instruction and player status.\
+•call_end(): logic of ending game.
 
 ## **Example Uses Case**
 This game designed for people that interested in playing broad game, which allows players to play on computer if they don't have physical cards or board. 
@@ -66,9 +69,12 @@ Color: string\
 ent: list[int]\
 In those variables, Name, Type and Price should be in specifed order.
 
-•take_chance.json: This is a JSON file. This file store 10 events and will be selected randomly. Key is their number label and values are cards, their decription and effect. These three variables are stored as String type and specific order is not required. 
+•take_chance.json: This is a JSON file. This file store 10 events and will be selected randomly. Key is their number label and values are cards, their decription and effect. These three variables are stored as String type and specific order is not required.\
+•space_location.json: This is a JSON file which contains specific coordinates of location.
+•land.py: this is a python file which contains the basic logic of land.\
+•player.py: this is a python file which contains the basic logic of player.\
+•house.png & monopoly.png: game map and house icon.
 
-•land.py: this is a python file which contains the basic logic of our program.
 
 
 
