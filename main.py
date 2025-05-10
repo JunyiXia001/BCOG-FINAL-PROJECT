@@ -21,7 +21,6 @@ color_num = {
 player_color = {
     1:"green", 2:"red", 3:"yellow", 4:"blue"
 }
-##Junyi Xia 
 ### MainFrame and Map display 
 class Display:   
     screen_size = (1280, 720)
@@ -122,7 +121,7 @@ class Display:
         self.buy_Land()
         self.message(f"this land is now {self.game_map[self.current_player.position].owner}\n\n")
         self.buy_button.pack_forget()
-
+    # function in side of class which call the sell land function
     def call_sell_land(self):
         sell_interface = tk.Toplevel()
         sell_interface.title("Choose an Image")
@@ -142,11 +141,11 @@ class Display:
 
         scrollable_frame = tk.Frame(canvas)
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-
+        #Message box setting 
         def on_configure(event):
             canvas.configure(scrollregion=canvas.bbox("all"))
         scrollable_frame.bind("<Configure>", on_configure)
-
+        #Inner window set up 
         def sell_update_canvas():
             for i in top_frame.winfo_children():
                 i.destroy()
@@ -176,7 +175,7 @@ class Display:
 
                 select_button = tk.Button(scrollable_frame, text="Select", command=lambda x=i: sell_selected(x))
                 select_button.grid(row=3, column=i, pady=10)
-
+        #function of selling house 
         def sell_selected(i):
             curr_land = self.current_player.lands[i]
             if curr_land.level > 1:
@@ -193,7 +192,7 @@ class Display:
         sell_update_canvas()
             
         sell_interface.mainloop()
-   
+    # function of upgrading house 
     def call_upgrade(self):
         upgrade_interface = tk.Toplevel()
         upgrade_interface.title("Choose an Image")
@@ -263,7 +262,7 @@ class Display:
         
         upgrade_interface.mainloop()
 
-
+    #End Game detection 
     def call_end(self):
         self.End_button.pack_forget()
         if len(self.player_list) == 1:
@@ -291,6 +290,7 @@ class Display:
         self.info_frame.see("end")
         self.info_frame.config(state="disabled")
 
+    # take turn for player 
     def take_turn(self):
 
         # Check player's jail status
@@ -345,7 +345,6 @@ class Display:
         
         # self.current_player.position = (self.current_player.position + die1 + die2) % 40
 
-        #Check the space that players move to
         #Property
         if self.game_map[self.current_player.position].land_type == "Property":
             if self.game_map[self.current_player.position].pledge == False:
@@ -368,7 +367,7 @@ class Display:
                 elif self.game_map[self.current_player.position].owner != 0 and self.game_map[self.current_player.position].owner != self.current_player.id:
                     num = self.game_map[self.current_player.position].rent_Num()
                     self.paid(self.current_player.id, self.game_map[self.current_player.position].owner, num)
-        #Utility
+        #Utility 
         elif self.game_map[self.current_player.position].land_type == "Utility":
             if self.game_map[self.current_player.position].pledge == False:
                 if self.game_map[self.current_player.position].owner == 0:
@@ -390,11 +389,8 @@ class Display:
             self.paid_bank(100)
         #use previous one_more and count to decide whether the player have another moving chance
         
-        
-        ##BUG
-        # if one_more == True:
-        #     take_turn(game_map, player_list, player, count)
-        
+
+    #buy land
     def buy_Land(self):
         self.message(f"is {self.current_player.name} buying")
         if self.current_player.money >= self.game_map[self.current_player.position].price:
@@ -418,7 +414,7 @@ class Display:
                 for i in self.current_player.lands:
                     if i.land_type == "Utility":
                         i.level = self.current_player.color_count["Utility"] - 1
-
+    #M Make payment (paying rent)
     def paid(self, player, receiver, num):
         self.message(f"{self.player_list[player].name} pay {self.player_list[receiver].name} money by {num}")
         if self.player_list[player].money >= num:
@@ -491,7 +487,6 @@ class Display:
 #         player_list.pop(0)
     
   
-##Hongyu Xu 
 # Roll dice 
 def roll_die():
     return random.randint(1, 6)
@@ -500,17 +495,6 @@ def roll_die():
 
     
 
-    
-        
-
-    
-# purchase different types of land
-
-
-# make the payment 
-
-
-# make the payment to banke
 
 
 # load game information from json file
@@ -528,6 +512,7 @@ def load_Map():
 
     return lands
 
+#load coordinate forthe location
 def load_location():
     location = []
     with open("Json/space_location.json", "r") as file:
