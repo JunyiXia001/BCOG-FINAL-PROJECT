@@ -438,22 +438,22 @@ class Display:
             del self.player_list[player]
 
     def paid_bank(self, num):
-        self.message(f"{self.player_list[player].name} pay bank money by {num}")
-        if self.player_list[player].money >= num:
-            self.player_list[player].money -= num
-        elif self.player_list[player].land_sum() >= num:
+        self.message(f"{self.current_player.name} pay bank money by {num}")
+        if self.current_player.money >= num:
+            self.current_player.money -= num
+        elif self.current_player.land_sum() >= num:
             self.message(f"you have to sell properties to pay")
-            while self.player_list[player].lands:
+            while self.current_player.lands:
                 self.call_sell_land()
-                if self.player_list[player].money >= num:
-                    self.player_list[player].money -= num
+                if self.current_player.money >= num:
+                    self.current_player.money -= num
                     break
-        elif self.player_list[player].land_sum() < num:
-            self.message(f"{self.player_list[player].name} is out")
-            for land in self.player_list[player].lands:
+        elif self.current_player.land_sum() < num:
+            self.message(f"{self.current_player.name} is out")
+            for land in self.current_player.lands:
                 land.owner = 0
                 land.level = 0
-            del self.player_list[player]
+            del self.player_list[self.current_player.id]
     
 
     # Player visualization 
