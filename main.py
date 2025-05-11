@@ -324,7 +324,6 @@ class Display:
             tk.Label(jail_popup, text="Choose your action:").pack(pady=10)
             tk.Button(jail_popup, text="Pay $50", command=pay).pack(pady=5)
             tk.Button(jail_popup, text="Roll for double", command=roll).pack(pady=5)
-            tk.Button(jail_popup, text="Wait", command=wait).pack(pady=5)
             return
         
         die1 = roll_die()
@@ -414,6 +413,8 @@ class Display:
                 for i in self.current_player.lands:
                     if i.land_type == "Utility":
                         i.level = self.current_player.color_count["Utility"] - 1
+        else:
+            self.message("you don't have enough money")
     #M Make payment (paying rent)
     def paid(self, player, receiver, num):
         self.message(f"{self.player_list[player].name} pay {self.player_list[receiver].name} money by {num}")
@@ -437,16 +438,22 @@ class Display:
             del self.player_list[player]
 
     def paid_bank(self, num):
-        if self.current_player.money >= num:
-            self.current_player.money -= num
-            return False
-        if self.current_player.land_sum >= num:
-            while self.current_player.lands:
-                sell_Land(self.current_player)
-                if self.current_player.money >= tmp_money:
-                    self.current_player.money -= num
-                    return False
-        return True
+        self.message(f"{self.player_list[player].name} pay bank money by {num}")
+        if self.player_list[player].money >= num:
+            self.player_list[player].money -= num
+        elif self.player_list[player].land_sum() >= num:
+            self.message(f"you have to sell properties to pay")
+            while self.player_list[player].lands:
+                self.call_sell_land()
+                if self.player_list[player].money >= num:
+                    self.player_list[player].money -= num
+                    break
+        elif self.player_list[player].land_sum() < num:
+            self.message(f"{self.player_list[player].name} is out")
+            for land in self.player_list[player].lands:
+                land.owner = 0
+                land.level = 0
+            del self.player_list[player]
     
 
     # Player visualization 
