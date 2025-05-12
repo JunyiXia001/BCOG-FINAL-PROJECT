@@ -19,6 +19,7 @@ class test_main(unittest.TestCase):
             self.fail("Dsiplay not initialized")
 
     #Reference: https://stackoverflow.com/questions/45163906/how-to-unit-test-function-opening-a-json-file
+    #Mock opening file 
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
     "Name": "Mediterranean Avenue",
     "Type": "Property",
@@ -27,6 +28,7 @@ class test_main(unittest.TestCase):
     "HousePrice": 50,
     "Rent": [2000, 4, 10, 30, 90, 160, 250]
     }))    
+    #testing loading file function
     def test_load_file(self, mock_file):
         print("test_load_file running")
         with open("Json\monopoly_space_info.json") as f:
@@ -38,7 +40,7 @@ class test_main(unittest.TestCase):
             print("Load file test passed")
         except Exception as e:
             self.fail("Load file test failed")
-
+    #testing change in money
     def test_money(self):
         print("test_money running")
 
@@ -55,7 +57,7 @@ class test_main(unittest.TestCase):
             print("test money passed")
         except Exception as e:
             self.fail("test_money failed")
-
+    #testing jail status 
     def test_jail(self):
         print("test_jail running")
         player = Player(1)

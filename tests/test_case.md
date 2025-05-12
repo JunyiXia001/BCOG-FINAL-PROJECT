@@ -1,4 +1,9 @@
-**Test Case**
+**Test Case(Part One)**
+We also provide a simple testsuite in this file, which can examine basic functions of our program. Its name is **testcase.py**. 
+
+
+
+**Test Case(Part Two)**
 Testing our program is straightforward. First of all, user need to set the value of the player_num variable to be **greater than 1 and,less than 4** (easier to make verification).
 
 Once the game starts, users can manually interact with the interface to verify key functions, including:

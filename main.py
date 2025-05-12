@@ -159,7 +159,7 @@ class Display:
                     images_info.append({"path": "image/house.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling house, price is {land.house_price/2}"})
                 else:
                     images_info.append({"path": "image/house.png", "description": f"Name: {land.name}\nLevel: {land.level}\n\nYou are selling lands, price is {int(land.price*0.7)}"})
-
+            #Sell window setting
             self.photo_images = [] 
             for i, info in enumerate(images_info):
                 img = Image.open(info['path'])
@@ -198,7 +198,7 @@ class Display:
         upgrade_interface.title("Choose an Image")
         upgrade_interface.geometry("800x600")
         
-
+        #Upgrade logic 
         def upgrade_selected(i):
             curr_land = upgradable[i]
             if self.current_player.money < curr_land.house_price:
@@ -221,7 +221,7 @@ class Display:
                         break
                 if add:
                     upgradable.append(land)
-                        
+        #Upgrade window setting           
         images_info = []
         for land in upgradable:
             images_info.append({"path": "image/house.png", "description": f"Name: {land.name}\ncurrent Level: {land.level}\nbuild a house cause{land.house_price}"})
@@ -301,13 +301,13 @@ class Display:
             jail_popup.title("You're in Jail")
             jail_popup.geometry("300x150")
             self.current_player.jail_status -= 1
-
+            #Pay to remove jail status
             def pay():
                 self.current_player.jail_status = 0
                 self.current_player.money -= 50
                 messagebox.showinfo("Info", "You paid $50 to get out of jail.")
                 jail_popup.destroy()
-
+            #Roll dice to remove jail status
             def roll():
                 die1 = roll_die()
                 die2 = roll_die()
@@ -428,7 +428,7 @@ class Display:
                         i.level = self.current_player.color_count["Utility"] - 1
         else:
             self.message("you don't have enough money")
-    #M Make payment (paying rent)
+    #Make payment (paying rent)
     def paid(self, player, receiver, num):
         self.message(f"{self.player_list[player].name} pay {self.player_list[receiver].name} money by {num}")
         if self.player_list[player].money >= num:
@@ -450,6 +450,7 @@ class Display:
                 land.level = 0
             del self.player_list[player]
 
+    #Make payment to bank
     def paid_bank(self, num):
         self.message(f"{self.current_player.name} pay bank money by {num}")
         if self.current_player.money >= num:
