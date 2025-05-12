@@ -386,6 +386,19 @@ class Display:
         #Luxury Tax
         elif self.game_map[self.current_player.position].land_type == "Luxury Tax":
             self.paid_bank(100)
+        #Take chance
+        elif self.game_map[self.current_player.position].land_type == "Chance":
+            self.message("player takes a chance")
+            chance = take_chance() 
+            if chance["Card"] == "Money":
+                self.current_player.money += chance["Effect"]
+                self.message(f"Player recieve {chance["Effect"]} $")
+            elif chance["Card"] == "Tax":
+                self.current_player.money += chance["Effect"]
+                self.message(f"Player recieve {chance["Effect"]} $")
+                
+
+
         #use previous one_more and count to decide whether the player have another moving chance
         
 
@@ -467,33 +480,7 @@ class Display:
         x, y = location_input
         size = 20
         self.map_canvas.move(self.player_icon[id - 1], x - self.map_canvas.coords(self.player_icon[id - 1])[0], y - self.map_canvas.coords(self.player_icon[id - 1])[1])
-        # self.map_canvas.create_rectangle(
-        # x , y , x + size , y + size,
-        # fill='green',
-        # outline='black',
-        # width=2, tags=f"{id}")
-        # self.map_canvas.tag_raise(f"{id}")
-        # self.map_canvas.tag_lower("map_image")
-        # print(f"icon created, {location_input}")
-
-
-        
-# def main():
-#     #added this line to run the window 
-#     my_display = Display()
-#     my_display.root.mainloop()
-#     # my_display.create_map_frame()
-
-#     player_num = 0
-   
-#     for i in range(player_num):
-#         player_list.append(Player(i+1))
-#     while len(player_list) > 1:
-#         take_turn(game_map, player_list, player_list[0], 0)
-#         player_list.append(player_list[0])
-#         player_list.pop(0)
     
-  
 # Roll dice 
 def roll_die():
     return random.randint(1, 6)
@@ -531,11 +518,10 @@ def load_location():
 
 ## chance situation
 def take_chance():
-    with open("Json/take_chance.json") as file_handle:
-        chance_card = file_handle.read()
-    card_dict = json.loads(chance_card)
-    num = random.randint(0,10)
-    return card_dict.get(num)
+    with open("Json//chance_card.json") as file_handle:
+        chance_card = json.load(file_handle)
+    num = random.randint(0, len(chance_card) - 1)
+    return chance_card[num]
 
 def main():
     #added this line to run the window 

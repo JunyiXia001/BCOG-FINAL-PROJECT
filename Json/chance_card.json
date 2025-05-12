@@ -1,52 +1,44 @@
-{
-    0: {
-        "Card": "Advance to Go",
-        "Description": "Advance to Go. Collect $200.",
-        "Effect": "Move to Go, Collect 200"
-    },
-    1: {
-        "Card": "Bank Dividend",
-        "Description": "Bank pays you a dividend of $50.",
-        "Effect": "Receive 50 from the bank"
-    },
-    2: {
-        "Card": "Get Out of Jail Free",
-        "Description": "Get out of Jail free. This card may be kept until needed or sold.",
-        "Effect": "Get Out of Jail Free Card"
-    },
-    3: {
-        "Card": "Go Back 3 Spaces",
-        "Description": "Go back 3 spaces.",
-        "Effect": "Move back 3 spaces"
-    },
-    4: {
-        "Card": "Go to Jail",
-        "Description": "Go directly to Jail. Do not pass Go. Do not collect $200.",
-        "Effect": "Move to Jail"
-    },
-    5: {
-        "Card": "Speeding Fine",
-        "Description": "Pay a $15 speeding fine.",
-        "Effect": "Deduct 15"
-    },
-    6: {
-        "Card": "Building Repairs",
-        "Description": "Make general repairs on all your property. Pay $25 per house and $100 per hotel.",
-        "Effect": "Charge 25 per house, 100 per hotel"
-    },
-    7: {
-        "Card": "Advance to Boardwalk",
-        "Description": "Take a walk on the Boardwalk. Advance to Boardwalk.",
-        "Effect": "Move to Boardwalk"
-    },
-    8: {
-        "Card": "Pay School Fees",
-        "Description": "Pay school fees of $150.",
-        "Effect": "Deduct 150"
-    },
-    9: {
-        "Card": "Advance to the Nearest Utility",
-        "Description": "Advance to the nearest utility. If unowned, you may buy it. If owned, pay rent to the owner.",
-        "Effect": "Move to nearest utility"
-    }
-}
+[
+  {
+    "Card": "Money",
+    "Effect": 50
+  },
+  {
+    "Card": "Money",
+    "Effect": 100
+  },
+  {
+    "Card": "Money",
+    "Effect": 150
+  },
+  {
+    "Card": "Money",
+    "Description": "Go back 3 spaces.",
+    "Effect": 200
+  },
+  {
+    "Card": "Money",
+    "Effect": 250
+  },
+  {
+    "Card": "Tax",
+    "Description": "Pay a $15 speeding fine.",
+    "Effect": -50
+  },
+  {
+    "Card": "Tax",
+    "Effect": -100
+  },
+  {
+    "Card": "Tax",
+    "Effect": -150
+  },
+  {
+    "Card": "Tax",
+    "Effect": -200
+  },
+  {
+    "Card": "Tax",
+    "Effect": -250
+  }
+]
