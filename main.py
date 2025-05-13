@@ -6,6 +6,7 @@ from PIL import Image, ImageTk
 import json
 from tkinter import ttk
 from tkinter import messagebox
+# hongyux4
 color_num = {
     "Railroad": 4,
     "Purple": 2,
@@ -18,12 +19,15 @@ color_num = {
     "Dark Blue": 2,
     "Utility": 2
 }
+# hongyux4
 player_color = {
     1:"green", 2:"red", 3:"yellow", 4:"blue"
 }
 ### MainFrame and Map display 
 class Display:   
     screen_size = (1280, 720)
+    
+    # hongyux4
     def __init__(self):
         #Basic setup of display function 
         self.root = tk.Tk()
@@ -65,6 +69,7 @@ class Display:
         self.create_information_panel()
     
     #Create interface frame and buttons 
+    # hongyux4
     def create_interface_frame(self):
         self.take_turn_button = tk.Button(self.interface_frame, text="Go", command=self.call_take_turn, bg="green") 
         self.take_turn_button.pack(side = "right",padx=10, pady=10)
@@ -108,6 +113,7 @@ class Display:
         self.message("Click Go! to start the game! Good Luck!\n\n")
     # connect button with take turn method 
 
+    # hongyux4
     def call_take_turn(self):
         self.message(f"It's {self.current_player.name}'s turn.")
         self.message(f"money: {self.current_player.money}\n")
@@ -117,11 +123,14 @@ class Display:
         self.End_button.pack(side = "right",padx=10,pady=10)
     # connect button with buy land method 
 
+    # hongyux4
     def call_buy_land(self):
         self.buy_Land()
         self.message(f"this land is now {self.game_map[self.current_player.position].owner}\n\n")
         self.buy_button.pack_forget()
+
     # function in side of class which call the sell land function
+    # hongyux4
     def call_sell_land(self):
         sell_interface = tk.Toplevel()
         sell_interface.title("Choose an Image")
@@ -192,7 +201,9 @@ class Display:
         sell_update_canvas()
             
         sell_interface.mainloop()
+
     # function of upgrading house 
+    # hongyux4
     def call_upgrade(self):
         upgrade_interface = tk.Toplevel()
         upgrade_interface.title("Choose an Image")
@@ -263,6 +274,7 @@ class Display:
         upgrade_interface.mainloop()
 
     #End Game detection 
+    # hongyux4
     def call_end(self):
         self.End_button.pack_forget()
         if len(self.player_list) == 1:
@@ -291,6 +303,7 @@ class Display:
         self.info_frame.config(state="disabled")
 
     # take turn for player 
+    # hongyux4
     def take_turn(self):
 
         # Check player's jail status
@@ -403,6 +416,7 @@ class Display:
         
 
     #buy land
+    # hongyux4
     def buy_Land(self):
         self.message(f"is {self.current_player.name} buying")
         if self.current_player.money >= self.game_map[self.current_player.position].price:
@@ -429,6 +443,7 @@ class Display:
         else:
             self.message("you don't have enough money")
     #Make payment (paying rent)
+    # hongyux4
     def paid(self, player, receiver, num):
         self.message(f"{self.player_list[player].name} pay {self.player_list[receiver].name} money by {num}")
         if self.player_list[player].money >= num:
@@ -451,6 +466,7 @@ class Display:
             del self.player_list[player]
 
     #Make payment to bank
+    # hongyux4
     def paid_bank(self, num):
         self.message(f"{self.current_player.name} pay bank money by {num}")
         if self.current_player.money >= num:
@@ -471,18 +487,18 @@ class Display:
     
 
     # Player visualization 
+    # hongyux4
     def move_player_icon(self, location_input, id):
         
         if location_input is None:
             ("Location not found")
             return
-            
-        
         x, y = location_input
         size = 20
         self.map_canvas.move(self.player_icon[id - 1], x - self.map_canvas.coords(self.player_icon[id - 1])[0], y - self.map_canvas.coords(self.player_icon[id - 1])[1])
     
 # Roll dice 
+# hongyux4
 def roll_die():
     return random.randint(1, 6)
 
@@ -493,6 +509,7 @@ def roll_die():
 
 
 # load game information from json file
+# hongyux4
 def load_Map():
     lands = []
     with open("Json/space_location.json", "r") as file:

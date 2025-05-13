@@ -1,3 +1,4 @@
+# hongyux4
 class Land:
     def __init__(self, name, land_type, house_price = 0, color = "", price = 0, rent = [], location = None):
         self.owner = 0

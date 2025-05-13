@@ -2,6 +2,8 @@
 ## Topic: Monopoly
 Our program is a simple simulator of the board game "Monopoly." Monopoly is an economic-themed board game, and players will roll dice to make decisions and move on the board, such as purchasing land, paying rent, or having special events. Finally, the player with the most money will win the game and lose when the player goes bankrupt. 
 
+To start the game, make sure the terminal is in the directory ../BCOG-FINAL-PROJECT and run main.py, if it doesn't work, try open the folder in vscode and run main.py (this is how we run the program in our local enviroment)
+
 ### **Function A:**
 This is the main function that allows players to choose the action term by term. 
 
@@ -21,6 +23,7 @@ We have a class of players that shows up the money and the ownership of the land
 •One person will devolop the class/function of players.(Function C)\
 •One person will develop the map (Function B)\
 •At last, we will develop the main functuion of the game together. (Function A)
+The work done by member will be showed in the comment in each of the function or class
 
 
 ## **Communication**
