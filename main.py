@@ -6,6 +6,10 @@ from PIL import Image, ImageTk
 import json
 from tkinter import ttk
 from tkinter import messagebox
+#JSON file: 
+#Junyi Xia: chance_card.json & spce_location.json & monopoly_space_info.json
+#Hongyu Xu: monopoly_space_info.json
+
 # hongyux4
 color_num = {
     "Railroad": 4,
@@ -28,6 +32,7 @@ class Display:
     screen_size = (1280, 720)
     
     # hongyux4
+    #Junyi Xia
     def __init__(self):
         #Basic setup of display function 
         self.root = tk.Tk()
@@ -48,7 +53,7 @@ class Display:
     
         self.current_player = self.player_list[1]
         self.land = None
-
+    #Junyi Xia 
     def init_window(self):
         self.root.title("Monopoly Game")
         #Interface
@@ -70,6 +75,7 @@ class Display:
     
     #Create interface frame and buttons 
     # hongyux4
+     #Junyi Xia 
     def create_interface_frame(self):
         self.take_turn_button = tk.Button(self.interface_frame, text="Go", command=self.call_take_turn, bg="green") 
         self.take_turn_button.pack(side = "right",padx=10, pady=10)
@@ -83,6 +89,7 @@ class Display:
         self.End_button.pack(side = "right",padx=10,pady=10)
 
     #Create map frame and load map
+     #Junyi Xia 
     def create_map_frame(self):
         self.map_width = self.screen_size[0] - self.info_display_width
         self.map_height = self.screen_size[1] - self.interface_height
@@ -97,6 +104,7 @@ class Display:
 
 
     #Create information panel 
+     #Junyi Xia 
     def create_information_panel(self):
         panel = tk.Label(self.info_panel, text="Game Information", font=("Times New Roman", 12, "bold"))
         panel.pack(pady=(5,5))
@@ -114,6 +122,7 @@ class Display:
     # connect button with take turn method 
 
     # hongyux4
+     #Junyi Xia 
     def call_take_turn(self):
         self.message(f"It's {self.current_player.name}'s turn.")
         self.message(f"money: {self.current_player.money}\n")
@@ -124,6 +133,7 @@ class Display:
     # connect button with buy land method 
 
     # hongyux4
+     #Junyi Xia 
     def call_buy_land(self):
         self.buy_Land()
         self.message(f"this land is now {self.game_map[self.current_player.position].owner}\n\n")
@@ -296,6 +306,7 @@ class Display:
 
     # setup for message box 
     # Source from stackoverflow Date: 4/3/2025 Link: https://stackoverflow.com/questions/3842155/is-there-a-way-to-make-the-tkinter-text-widget-read-only?
+     #Junyi Xia 
     def message(self, message):
         self.info_frame.config(state="normal")
         self.info_frame.insert("end", message + "\n")
@@ -304,6 +315,7 @@ class Display:
 
     # take turn for player 
     # hongyux4
+    #Junyi Xia 
     def take_turn(self):
 
         # Check player's jail status
@@ -350,7 +362,7 @@ class Display:
             self.message("pass go, get 200\n")
             self.current_player.money += 200
         #for debug fix moving range
-        self.current_player.position = (self.current_player.position + 1) % 40
+        self.current_player.position = (self.current_player.position + die1 + die2) % 40
         land = self.game_map[self.current_player.position]
         self.message(f"{self.current_player.name} go to {land.name}.\n")
         self.move_player_icon(land.location, self.current_player.id)
@@ -509,7 +521,7 @@ def roll_die():
 
 
 # load game information from json file
-# hongyux4
+# hongyux4 
 def load_Map():
     lands = []
     with open("Json/space_location.json", "r") as file:
@@ -523,7 +535,7 @@ def load_Map():
         
 
     return lands
-
+ #Junyi Xia 
 #load coordinate forthe location
 def load_location():
     location = []
@@ -533,7 +545,7 @@ def load_location():
         location.append(loc_info[str(i)])
     return location
 
-
+#Junyi Xia 
 ## chance situation
 def take_chance():
     with open("Json//chance_card.json") as file_handle:
