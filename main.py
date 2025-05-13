@@ -74,7 +74,6 @@ class Display:
         self.create_information_panel()
     
     #Create interface frame and buttons 
-    # hongyux4
      #Junyi Xia 
     def create_interface_frame(self):
         self.take_turn_button = tk.Button(self.interface_frame, text="Go", command=self.call_take_turn, bg="green") 
@@ -285,6 +284,7 @@ class Display:
 
     #End Game detection 
     # hongyux4
+    #Junyi Xia 
     def call_end(self):
         self.End_button.pack_forget()
         if len(self.player_list) == 1:
@@ -315,7 +315,6 @@ class Display:
 
     # take turn for player 
     # hongyux4
-    #Junyi Xia 
     def take_turn(self):
 
         # Check player's jail status
@@ -412,6 +411,7 @@ class Display:
         elif self.game_map[self.current_player.position].land_type == "Luxury Tax":
             self.paid_bank(100)
         #Take chance
+        #Junyi Xia 
         elif self.game_map[self.current_player.position].land_type == "Chance":
             self.message("player takes a chance")
             chance = take_chance() 
