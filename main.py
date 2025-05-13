@@ -212,7 +212,7 @@ class Display:
         sell_interface.mainloop()
 
     # function of upgrading house 
-    # hongyux4
+    #Junyi Xia
     def call_upgrade(self):
         upgrade_interface = tk.Toplevel()
         upgrade_interface.title("Choose an Image")
@@ -500,6 +500,7 @@ class Display:
 
     # Player visualization 
     # hongyux4
+    #Junyi Xia 
     def move_player_icon(self, location_input, id):
         
         if location_input is None:
@@ -521,7 +522,8 @@ def roll_die():
 
 
 # load game information from json file
-# hongyux4 
+# hongyux4
+#Junyi Xia 
 def load_Map():
     lands = []
     with open("Json/space_location.json", "r") as file:
