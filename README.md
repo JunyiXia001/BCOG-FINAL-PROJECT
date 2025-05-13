@@ -78,6 +78,12 @@ In those variables, Name, Type and Price should be in specifed order.
 •player.py: this is a python file which contains the basic logic of player.\
 •house.png & monopoly.png: game map and house icon.
 
+## **Game Rule**
+•Player can build house on vacant space. Other players need to pay rent when they go to space owned by other players.\
+•Game allows player to buy, sell and upgrade the land.\
+•Bankrupted players will be removed.\
+•The game will end, if only one player remains.
+
 
 
 
